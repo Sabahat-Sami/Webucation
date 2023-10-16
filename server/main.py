@@ -1,14 +1,20 @@
-from tg import expose, TGController, AppConfig
 from wsgiref.simple_server import make_server
+from tg import MinimalApplicationConfigurator
+from tg import expose, TGController
 
-class MyController(TGController):
-    @expose
+# RootController of our web app, in charge of serving content for /
+class RootController(TGController):
+    @expose(content_type="text/plain")
     def index(self):
-        return 'Hello, TurboGears'
+        return 'Hello World'
 
-config = AppConfig(minimal=True, root_controller=MyController())
+# Configure a new minimal application with our root controller.
+config = MinimalApplicationConfigurator()
+config.update_blueprint({
+    'root_controller': RootController()
+})
 
-app = config.make_wsgi_app()
-
-server = make_server('', 8080, app)
-server.serve_forever()
+# Serve the newly configured web application.
+print("Serving on port 8080...")
+httpd = make_server('', 8080, config.make_wsgi_app())
+httpd.serve_forever()

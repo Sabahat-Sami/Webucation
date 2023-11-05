@@ -1,6 +1,7 @@
-from tg import expose, TGController, request, redirect
+from tg import expose, TGController, request, redirect, session
 from connection import cursor, conn
 from psycopg2 import Error
+import json
 
 class UserController(TGController):
     """
@@ -29,6 +30,7 @@ VALUES (%s, %s, %s, %s, %s, %s, %s);'''
             print("Unable to create db entry", e)
             return "Error creating db entry"
     
+    @expose(content_type='application/json')
     def create_profile_friends(self):
         try:
             user_id = request.POST['user_id']
@@ -45,6 +47,7 @@ VALUES (%s, %s, %s, %s, %s, %s, %s);'''
             print("Unable to create db entry", e)
             return "Error creating db entry"
     
+    @expose(content_type='application/json')
     def create_profile_course(self):
         try:
             user_id = request.POST['user_id']
@@ -60,3 +63,76 @@ VALUES (%s, %s, %s, %s, %s, %s, %s);'''
         except Error as e:
             print("Unable to create db entry", e)
             return "Error creating db entry"
+        
+    """
+    DB Retrieval Endpoints
+    """
+    @expose(content_type='application/json')
+    def get_profile(self):
+        try:
+            email = request.POST['email']
+            password = request.POST['password'] # handle encrypt later
+
+            sql = '''SELECT * FROM Profile WHERE email = %s AND password = %s;'''
+            data = (email, password)
+
+            cursor.execute(sql, data) # maybe make these 4 lines a function to modularize later
+            result = cursor.fetchall()
+            column_names = [desc[0] for desc in cursor.description]
+            out = [dict(zip(column_names, row)) for row in result]
+
+            return json.dumps(out)
+        
+            # Login logic I made then realized this is just for retrieving data whoops
+            # print(result)
+            # if not result:
+            #     return redirect('/') # redirect to failed login page
+            # else:
+            #     column_names = [desc[0] for desc in cursor.description]
+            #     out = [dict(zip(column_names, row)) for row in result]
+            #     session['profile'] = out
+            #     session.save()
+            #     # session.delete() for logout
+            #     return redirect('/display_data') # redirect to successful login page
+
+        except Error as e:
+            print("Unable to get db entry", e)
+            return "Error retrieving from db"
+    
+    @expose(content_type='application/json')
+    def get_profile_friends(self):
+        try:
+            user_id = request.POST['user_id']
+
+            sql = '''SELECT * FROM ProfileFriends WHERE user_id = %d;'''
+            data = (user_id,)
+
+            cursor.execute(sql, data)
+            result = cursor.fetchall()
+            column_names = [desc[0] for desc in cursor.description]
+            out = [dict(zip(column_names, row)) for row in result]
+
+            return json.dumps(out)
+        
+        except Error as e:
+            print("Unable to get db entry", e)
+            return "Error retrieving from db"
+    
+    @expose(content_type='application/json')
+    def get_profile_course(self):
+        try:
+            user_id = request.POST['user_id']
+
+            sql = '''SELECT * FROM ProfileCourse WHERE user_id = %d;'''
+            data = (user_id,)
+
+            cursor.execute(sql, data)
+            result = cursor.fetchall()
+            column_names = [desc[0] for desc in cursor.description]
+            out = [dict(zip(column_names, row)) for row in result]
+
+            return json.dumps(out)
+        
+        except Error as e:
+            print("Unable to get db entry", e)
+            return "Error retrieving from db"

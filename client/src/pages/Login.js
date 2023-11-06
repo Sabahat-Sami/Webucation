@@ -13,7 +13,7 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault()
     axios
-      .get('http://localhost:3001/login', {
+      .get('http://localhost:8080/user/get_login', {
         params: {
           email: email,
           password: password,
@@ -21,7 +21,9 @@ const Login = () => {
       })
       .then(res => {
         console.log(res)
+        if (res.status === 200){
         navigate('/admin')
+      }
       })
       .catch(err => {
         console.log(err)

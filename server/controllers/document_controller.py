@@ -1,9 +1,12 @@
-from tg import expose, TGController, request, redirect
+from tg import expose, TGController, request, redirect, response
 from connection import cursor, conn
 from psycopg2 import Error, Binary
 import json
 
 class DocumentController(TGController):
+    def _before(self, *remainder, **params):
+        response.headers.update({'Access-Control-Allow-Origin': '*'})
+        response.headers.update({"Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"})
     """
     DB Creation Endpoints
     """

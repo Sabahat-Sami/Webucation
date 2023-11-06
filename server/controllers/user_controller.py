@@ -1,22 +1,33 @@
-from tg import expose, TGController, request, redirect, session
+from tg import expose, TGController, request, redirect, session, response
 from connection import cursor, conn
 from psycopg2 import Error
 import json
+import bcrypt
+
+def encrypt_password(password):
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 class UserController(TGController):
+    def _before(self, *remainder, **params):
+        response.headers.update({'Access-Control-Allow-Origin': '*'})
+        response.headers.update({"Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"})
     """
     DB Creation Endpoints
     """
     @expose(content_type='application/json')
     def create_profile(self):
         try:
-            email = request.POST['email']
-            username = request.POST['username']
-            password = request.POST['password'] # handle encrypt later
-            fname = request.POST['fname']
-            lname = request.POST['lname']
-            phone_number = request.POST['phone_number']
-            about = request.POST['about']
+            if request.method == "OPTIONS":
+                return 'OK'
+
+            body = request.json_body
+            email = body['email']
+            username = body['email']
+            password = encrypt_password(body['password'])
+            fname = ''
+            lname = ''
+            phone_number = ''
+            about = ''
 
             sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) 
 VALUES (%s, %s, %s, %s, %s, %s, %s);'''
@@ -24,11 +35,13 @@ VALUES (%s, %s, %s, %s, %s, %s, %s);'''
 
             cursor.execute(sql, data)
             conn.commit()
-            redirect('/') # redirect somewhere on success 
+            print("Success")
+            response.status = 200
 
         except Error as e:
             print("Unable to create db entry", e)
-            return "Error creating db entry"
+            response.status = 500
+        return response
     
     @expose(content_type='application/json')
     def create_profile_friends(self):

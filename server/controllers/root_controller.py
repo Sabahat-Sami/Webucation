@@ -1,4 +1,4 @@
-from tg import expose, TGController
+from tg import expose, TGController, session, response
 from connection import cursor, conn
 from controllers.user_controller import UserController
 from controllers.document_controller import DocumentController
@@ -6,6 +6,7 @@ from controllers.course_controller import CourseController
 
 # RootController of our web app, in charge of serving content for /
 class RootController(TGController):
+    
     user = UserController()
     document = DocumentController()
     course = CourseController()
@@ -24,3 +25,13 @@ class RootController(TGController):
         except Exception as e:
             print("Unable to retrieve data", e)
             return "Error retrieving data"
+    
+    @expose(content_type="text/html")
+    def test_retrieval(self):
+        return '''
+        <form action="/user/get_profile" method="post">
+            <input type="text" name="email" placeholder="Email">
+            <input type="password" name="password" placeholder="Password">
+            <input type="submit" value="Login">
+        </form>
+        '''

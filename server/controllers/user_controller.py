@@ -5,7 +5,11 @@ import json
 import bcrypt
 
 def encrypt_password(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf8')
+
+
+def compare_password(password, hashed_password):
+    return bcrypt.hashpw(password.encode('utf8'), hashed_password.encode('utf8')) == hashed_password.encode('utf8')
 
 class UserController(TGController):
     def _before(self, *remainder, **params):
@@ -80,6 +84,50 @@ VALUES (%s, %s, %s, %s, %s, %s, %s);'''
     """
     DB Retrieval Endpoints
     """
+    # Log in
+    @expose(content_type='application/json')
+    def get_login(self):
+        try:
+            if request.method == "OPTIONS":
+                return 'OK'
+            
+            # Gets form data
+            email = str(request.GET['email'])
+            password = str(request.GET['password'])
+            
+            # Gets users from database
+            sql = 'SELECT password FROM Profile WHERE email = %s'
+            cursor.execute(sql,(email,)) # maybe make these 4 lines a function to modularize later
+            result = cursor.fetchone()
+
+
+
+            # If no user exists
+            if(not result):
+                print("No user exists")
+                response.status = 500
+
+            # If user exists
+            else:
+                if compare_password(password, result[0]):
+                    print("Success")
+                    response.status = 200
+                else:
+                    print("Wrong password")
+                    response.status = 500
+
+            return response
+
+            
+            response.status = 500
+            return response.status
+        except Error as e:
+            print("Unable to serach for db entry", e)
+            response.status = 500
+            return response.status
+
+
+
     @expose(content_type='application/json')
     def get_profile(self):
         try:

@@ -24,9 +24,10 @@ async def create_profile(body: LoginInput):
         lname = ''
         phone_number = ''
         about = ''
-        sql = 'INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) VALUES (%s, %s, %s, %s, %s, %s, %s);'
+        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) VALUES (%s, %s, %s, %s, %s, %s, %s);'''
         data = (email, username, password, fname, lname, phone_number, about)
-        cursor.execute(sql, data)
+        a = cursor.execute(sql, data)
+        print("WOOOOW", a)
         conn.commit()
         print("Success")
         return {"email": email}
@@ -34,6 +35,7 @@ async def create_profile(body: LoginInput):
 
     except Error as e:
         print("Unable to create db entry", e)
+        conn.rollback()
         return JSONResponse(
                 status_code=500,
                 content={

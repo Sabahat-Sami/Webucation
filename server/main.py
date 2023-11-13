@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi import APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from controllers import user_controller_fast
+from controllers import user_controller
 import uvicorn
 
 app = FastAPI()
-app.include_router(user_controller_fast.router)
+app.include_router(user_controller.router)
 
 '''
 origins = [

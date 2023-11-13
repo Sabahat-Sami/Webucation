@@ -3,37 +3,49 @@ from psycopg2 import Error
 import json
 import bcrypt
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Response, Request, HTTPException, status
+from fastapi.responses import JSONResponse
+from controllers.schemas import *
+
 
 router = APIRouter()
 
 
-@router.get("/create_profile/")
-def create_profile(self):
+@router.post("/user/create_profile", response_model=None)
+async def create_profile(body: LoginInput):
+    
     try:
-        if request.method == "OPTIONS":
-            return 'OK'
-        body = request.json_body
-        email = body['email']
-        username = body['email']
-        password = encrypt_password(body['password'])
+        email = body.email
+        username = body.email
+        password = encrypt_password(body.password)
+        print(email, username, password)
+        
         fname = ''
         lname = ''
         phone_number = ''
         about = ''
-        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) VALUES (%s, %s, %s, %s, %s, %s, %s);'''
+        sql = 'INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) VALUES (%s, %s, %s, %s, %s, %s, %s);'
         data = (email, username, password, fname, lname, phone_number, about)
         cursor.execute(sql, data)
         conn.commit()
         print("Success")
-        response.status = 200
+        return {"email": email}
+
+
     except Error as e:
         print("Unable to create db entry", e)
-        response.status = 500
-    return response
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Easdasdsrror"}
+            )
 
-@router.get("/create_profile_friends/")
-def create_profile_friends(self):
+
+    
+
+@router.post("/create_profile_friends/")
+async def create_profile_friends():
     try:
         user_id = request.POST['user_id']
         friend_id = request.POST['friend_id']
@@ -47,8 +59,8 @@ def create_profile_friends(self):
         print("Unable to create db entry", e)
         return "Error creating db entry"
 
-@router.get("/create_profile_course/")
-def create_profile_course(self):
+@router.post("/create_profile_course/")
+async def create_profile_course():
     try:
         user_id = request.POST['user_id']
         course_id = request.POST['course_id']
@@ -66,43 +78,49 @@ def create_profile_course(self):
 DB Retrieval Endpoints
 """
 # Log in
-@router.get("/get_login/")
-def get_login(self):
+@router.get("/user/get_login")
+async def get_login(email: str, password: str):
     try:
-        if request.method == "OPTIONS":
-            return 'OK'
         
         # Gets form data
-        email = str(request.GET['email'])
-        password = str(request.GET['password'])
-        
+        #email = str(request.GET['email'])
+        #password = str(request.GET['password'])
+
         # Gets users from database
         sql = 'SELECT password FROM Profile WHERE email = %s'
         cursor.execute(sql,(email,)) # maybe make these 4 lines a function to modularize later
         result = cursor.fetchone()
+
         # If no user exists
         if(not result):
             print("No user exists")
-            response.status = 500
+            raise HTTPException(status_code=404, detail="Item not found")
+
         # If user exists
         else:
+            # Success
             if compare_password(password, result[0]):
                 print("Success")
-                response.status = 200
+                return {"email": email}
+
+            # Wrong password
             else:
                 print("Wrong password")
-                response.status = 500
-        return response
-        
-        response.status = 500
-        return response.status
+                raise HTTPException(status_code=404, detail="Item not found")
+
+
     except Error as e:
         print("Unable to serach for db entry", e)
-        response.status = 500
-        return response.status
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Easdasdsrror"}
+            )
+
 
 @router.get("/get_profile/")
-def get_profile(self):
+async def get_profile():
     try:
         email = request.POST['email']
         password = request.POST['password'] # handle encrypt later
@@ -130,7 +148,7 @@ def get_profile(self):
         return "Error retrieving from db"
 
 @router.get("/get_profile_friends/")
-def get_profile_friends(self):
+async def get_profile_friends():
     try:
         user_id = request.POST['user_id']
         sql = '''SELECT * FROM ProfileFriends WHERE user_id = %d;'''
@@ -146,7 +164,7 @@ def get_profile_friends(self):
         return "Error retrieving from db"
 
 @router.get("/get_profile_course/")
-def get_profile_course(self):
+async def get_profile_course():
     try:
         user_id = request.POST['user_id']
         sql = '''SELECT * FROM ProfileCourse WHERE user_id = %d;'''

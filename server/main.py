@@ -1,28 +1,36 @@
-from wsgiref.simple_server import make_server
-from tg import MinimalApplicationConfigurator
-from controllers.root_controller import RootController
-from beaker.middleware import SessionMiddleware
-import json
+from fastapi import FastAPI
+from fastapi import APIRouter
+from fastapi.middleware.cors import CORSMiddleware
+from controllers import user_controller
+import uvicorn
 
-# Configure a new minimal application with our root controller.
-config = MinimalApplicationConfigurator()
-config.update_blueprint({
-    'root_controller': RootController(),
-    'session.enabled': True,
-    'session.data_serializer': 'json'
-})
+app = FastAPI()
+app.include_router(user_controller.router)
 
-session_options = {
-    'session.type': 'cookie',  
-    'session.cookie_expires': True,
-    'session.auto': True,
-    'session.key': 'test_session_key', # generate actual keys
-    'session.secret': 'test_secret_key',
-    'session.validate_key': 'test_validate_key'
-}
-app = SessionMiddleware(config.make_wsgi_app(), session_options)
+'''
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+    "http://localhost:8080/user/create_profile",
+]
+'''
 
-# Serve the newly configured web application.
-print("Serving on port 8080...")
-httpd = make_server('', 8080, app)
-httpd.serve_forever()
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host = "localhost", port = 8080, log_level='debug', access_log=True)

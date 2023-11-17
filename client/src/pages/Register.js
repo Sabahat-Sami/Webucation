@@ -17,16 +17,19 @@ const Register = () => {
     e.preventDefault()
 
     axios
-      .post('http://localhost:3001/signup', {
+      .post('http://localhost:8080/user/create_profile', {
         email: email,
         password: password,
-      })
+      },
+      )
       .then(res => {
         console.log(res)
-        navigate('/login')
-        setEmail('')
-        setPassword('')
-        setConfirmPassword('')
+        if (res.status === 200){
+          navigate('/login')
+          setEmail('')
+          setPassword('')
+          setConfirmPassword('')
+        }
       })
       .catch(err => {
         console.log(err)

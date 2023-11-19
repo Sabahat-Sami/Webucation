@@ -24,12 +24,15 @@ function Navbar() {
             href='/login'
             className='border-none bg-transparent text-[#424B5A] font-bold mr-4 flex justify-center items-center'
           >
-            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl'>
+            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
               Log In
             </button>
           </a>
-          <a href='/register'>
-            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl'>
+          <a 
+            href='/register'
+            className='border-none bg-transparent text-[#424B5A] font-bold mr-4 flex justify-center items-center'
+          >
+            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
               Sign Up
             </button>
           </a>

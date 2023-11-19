@@ -12,18 +12,24 @@ router = APIRouter()
 DB Creation Endpoints
 """
 @router.post("/user/create_profile", response_model=None)
-async def create_profile(body: LoginInput):
+async def create_profile(body: SignupInput):
     
     try:
+        if(body.password != body.confirmPassword):
+            print("Passwords do not match")
+            raise HTTPException(status_code=404, detail="Passwords do not match")
+
         email = body.email
         username = body.email
         password = encrypt_password(body.password)
+        fname = body.fname
+        lname = body.lname
+        phone_number = body.phone_num
+        about = ''
+
         print(email, username, password)
         
-        fname = ''
-        lname = ''
-        phone_number = ''
-        about = ''
+        
         sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) VALUES (%s, %s, %s, %s, %s, %s, %s);'''
         data = (email, username, password, fname, lname, phone_number, about)
         a = cursor.execute(sql, data)

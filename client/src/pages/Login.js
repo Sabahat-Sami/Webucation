@@ -13,7 +13,7 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault()
     axios
-      .get('http://localhost:8080/user/get_login', {
+      .get('http://localhost:8080/user/get_profile', {
         params: {
           email: email,
           password: password,

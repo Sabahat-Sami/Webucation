@@ -22,6 +22,10 @@ const Register = () => {
       .post('http://localhost:8080/user/create_profile', {
         email: email,
         password: password,
+        confirmPassword: confirmPassword,
+        fname: username,
+        lname: name,
+        phone_num: number,
       },
       )
       .then(res => {

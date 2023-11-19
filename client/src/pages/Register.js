@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { ShieldCheckIcon, IdentificationIcon } from '@heroicons/react/outline'
+import { ShieldCheckIcon, IdentificationIcon, MailIcon, UserIcon, PhoneIcon} from '@heroicons/react/outline'
 import { LockClosedIcon } from '@heroicons/react/solid'
-import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,6 +8,9 @@ import React from 'react'
 
 const Register = () => {
   const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [name, setName] = useState('')
+  const [number, setNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const navigate = useNavigate()
@@ -47,10 +49,10 @@ const Register = () => {
             <h4 className='text-[#424B5A] mt-4'>Sign up improve your study habits!</h4>
           </div>
 
-          <div className='py-9 md:grid-cols-3 gap-1 px-2 text-center'>
+          <div className='py-9 px-2 columns-2 gap-5 text-center'>
             <form onSubmit={e => handleSubmit(e)}>
               <div className='flex block border border-grey-light bg-white w-full p-3 mb-4 rounded-3xl pl-5 shadow-xl'>
-                <IdentificationIcon className='w-8 flex justify-between items-center text-gray-500' />
+                <MailIcon className='w-8 flex justify-between items-center text-gray-500' />
                 <input
                   required
                   type='text'
@@ -59,6 +61,45 @@ const Register = () => {
                   value={email}
                   id='email'
                   onChange={e => setEmail(e.target.value)}
+                />
+              </div>
+
+            <div className='flex block border border-grey-light bg-white w-full p-3 mb-4 rounded-3xl pl-5 shadow-xl'>
+                <UserIcon className='w-8 flex justify-between items-center text-gray-500' />
+                <input
+                  required
+                  type='text'
+                  className='w-full p-3 ml-3 rounded-3xl pl-5'
+                  placeholder='Username'
+                  value={username}
+                  id='username'
+                  onChange={e => setUsername(e.target.value)}
+                />
+              </div>
+
+            <div className='flex block border border-grey-light bg-white w-full p-3 mb-4 rounded-3xl pl-5 shadow-xl'>
+                <IdentificationIcon className='w-8 flex justify-between items-center text-gray-500' />
+                <input
+                  required
+                  type='text'
+                  className='w-full p-3 ml-3 rounded-3xl pl-5'
+                  placeholder='Full Name'
+                  value={name}
+                  id='name'
+                  onChange={e => setName(e.target.value)}
+                />
+              </div>
+
+            <div className='flex block border border-grey-light bg-white w-full p-3 mb-4 rounded-3xl pl-5 shadow-xl'>
+                <PhoneIcon className='w-8 flex justify-between items-center text-gray-500' />
+                <input
+                  required
+                  type='text'
+                  className='w-full p-3 ml-3 rounded-3xl pl-5'
+                  placeholder='Phone Number'
+                  value={number}
+                  id='number'
+                  onChange={e => setNumber(e.target.value)}
                 />
               </div>
 
@@ -87,17 +128,15 @@ const Register = () => {
                   onChange={e => setConfirmPassword(e.target.value)}
                 />
               </div>
-
-              <button
-                type='submit'
-                className='text-white bg-[#707FDD] w-full text-center py-3 rounded-2xl  my-1 shadow-xl'
-              >
-                Register
-              </button>
             </form>
           </div>
+          <button
+            type='submit'
+            className='text-white bg-[#707FDD] w-full text-center py-3 rounded-2xl  my-1 shadow-xl'
+          >
+            Register
+          </button>
         </div>
-        <Toaster />
       </div>
     </div>
   )

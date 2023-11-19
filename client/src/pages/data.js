@@ -32,3 +32,46 @@ export const subjects = [
         img: "https://ewscripps.brightspotcdn.com/dims4/default/7775697/2147483647/strip/true/crop/1944x1094+0+101/resize/1280x720!/quality/90/?url=http%3A%2F%2Fewscripps-brightspot.s3.amazonaws.com%2Fd9%2F49%2F35ebad264c5dbc6c443633da8f28%2Fessay-main.jpg",
     },
 ]
+
+export const notes = [
+    {
+        id: 0,
+        title: "Chapter 1",
+        author: "Tanvi Rahman",
+        size: "2.6 MB",
+        gen_access: "Public",
+        categories: "🔴🟢"
+    },
+    {
+        id: 1,
+        title: "Chapter 2",
+        author: "Tanvi Rahman",
+        size: "1.6 MB",
+        gen_access: "Public",
+        categories: "🟢🔵"
+    },
+    {
+        id: 2,
+        title: "Chapter 3",
+        author: "Tanvi Rahman",
+        size: "3.8 MB",
+        gen_access: "Public",
+        categories: "🔵🟣"
+    },
+    {
+        id: 3,
+        title: "Chapter 4",
+        author: "Tanvi Rahman",
+        size: "2.6 MB",
+        gen_access: "Public",
+        categories: "🟣"
+    },
+    {
+        id: 4,
+        title: "Chapter 5",
+        author: "Tanvi Rahman",
+        size: "3.0 MB",
+        gen_access: "Private",
+        categories: "🟠🟡"
+    }
+]

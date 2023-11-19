@@ -1,29 +1,16 @@
 import { React, useState, useEffect } from 'react'
-import axios from 'axios'
+import { notes } from '../pages/data'
 
 export default function Table() {
   const [searchTerm, setSearchTerm] = useState('')
-  const [resumes, setResumes] = useState([])
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/resumes')
-      .then(res => {
-        setResumes(res.data)
-        console.log('Table', resumes)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
 
   return (
-    <div className=''>
-      {/* Search */}
-      <div className='flex mx-auto w-full px-3'>
+    <div className='bg-white'>
+      <br/><br/><br/>
+      <div className='flex mt-12 w-full px-3'>
         <div className='flex justify-between items-center w-full h-full'>
           <div>
-            <h1 className='text-3xl text-[#424B5A]'>Applicants</h1>
+            <h1 className='text-3xl text-[#424B5A]'>Notes</h1>
           </div>
           <div className='flex border-2 rounded-3xl text-[#424B5A]'>
             <button className='flex items-center justify-center px-4 border-r '>
@@ -46,39 +33,32 @@ export default function Table() {
         </div>
       </div>
 
-      {/* Applications */}
       <div className='mt-5'>
         <div className='border-b border-gray-200  '>
-          <table className='table-auto'>
+          <table className='table-auto w-full text-center'>
             <thead className='bg-gray-50'>
               <tr>
-                <th className='px-6 py-2 text-xs text-gray-500'>ID</th>
-                <th className='px-6 py-2 text-xs text-gray-500'>Name</th>
-                <th className='px-6 py-2 text-xs text-gray-500'>Email</th>
-                <th className='px-6 py-2 text-xs text-gray-500'>Number</th>
-                <th className='px-6 py-2 text-xs text-gray-500'>Applied On</th>
-                <th className='px-6 py-2 text-xs text-gray-500'>Resume URL</th>
+                <th className='px-6 py-2 text-s text-gray-500'>Document Title</th>
+                <th className='px-6 py-2 text-s text-gray-500'>Author</th>
+                <th className='px-6 py-2 text-s text-gray-500'>Size</th>
+                <th className='px-6 py-2 text-s text-gray-500'>Gen. Access</th>
+                <th className='px-6 py-2 text-s text-gray-500'>Categories</th>
               </tr>
             </thead>
 
-            <tbody className='bg-white'>
+            <tbody className='bg-white table-auto'>
 
-              {resumes.filter(val => {
-                    if (searchTerm === "") {
-                      return val
-                    } else if (val.content.includes(searchTerm)) {
-                      return val
-                    }
-                  }).map(resume => (
-                <tr className=''>
-                  <td className='px-6 py-4 text-sm text-gray-500'>
-                    {resume._id.substring(1, 5)}
-                  </td>
-                  <td className='px-6 py-4'>{resume.author}</td>
-                  <td className='px-6 py-4'>{resume.email}</td>
-                  <td className='px-6 py-4'>{resume.number}</td>
-                  <td className='px-6 py-4'>{resume.appliedOn}</td>
-                  <td className='px-6 py-4'>🔗</td>
+              {notes.map(note => (
+                <tr className='hover:bg-slate-100'>
+                  <a href=''>
+                    <td className='hover:text-blue-500 hover:underline hover:font-bold px-6 py-4 text-sm text-gray-500'>
+                      {note.title}
+                    </td>
+                  </a> 
+                  <td className='px-6 py-4'>{note.author}</td>
+                  <td className='px-6 py-4'>{note.size}</td>
+                  <td className='px-6 py-4'>{note.gen_access}</td>
+                  <td className='px-6 py-4'>{note.categories}</td>
                 </tr>
               ))}
 

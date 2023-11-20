@@ -5,6 +5,7 @@ import TextEditor from './pages/TextEditor.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.js'
 import Table from './components/Table.js'
+import Network from './pages/Network.js'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route exact path='/login' element={<Login />} />
           <Route exact path='/newNote' element={<TextEditor />} />
           <Route exact path='/notes' element={<Table />} />
+          <Route exact path='/network' element={<Network />} />
           <Route exact path='*' element={<Home />}></Route>
         </Routes>
       </Router>

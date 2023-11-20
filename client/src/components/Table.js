@@ -1,5 +1,10 @@
 import { React, useState, useEffect } from 'react'
 import { notes } from '../pages/data'
+import ch1 from "../pages/dummy/ch1.pdf"
+import ch2 from "../pages/dummy/ch2.pdf"
+import ch3 from "../pages/dummy/ch3.pdf"
+import ch4 from "../pages/dummy/ch4.pdf"
+import ch5 from "../pages/dummy/ch5.pdf"
 
 export default function Table() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -50,7 +55,7 @@ export default function Table() {
 
               {notes.map(note => (
                 <tr className='hover:bg-slate-100'>
-                  <a href=''>
+                  <a href={note.link} target="_blank" rel="noreferrer">
                     <td className='hover:text-blue-500 hover:underline hover:font-bold px-6 py-4 text-sm text-gray-500'>
                       {note.title}
                     </td>
@@ -65,6 +70,10 @@ export default function Table() {
             </tbody>
           </table>
         </div>
+        <a href="/newNote" target="_blank"><button
+          className='text-white font-bold w-[50%] ml-[25%] mt-4 py-3 rounded-full shadow-xl bg-[#707FDD] hover:bg-indigo-800	'
+        >+ New Document
+        </button></a>
       </div>
     </div>
   )

@@ -10,12 +10,15 @@ export default function App() {
         }
     };
     return (
-        <div className="font-bold justify-self-center">
+        <div className="font-bold ">
             <br/><br/><br/>
-            <Editor
+            <div className="mt-8 rounded-full ml-[8%]">
+                <p className="text-2xl mb-4 ml-[40%] underline text-[#424B5A]">New Note</p>
+                <Editor
                 onInit={(evt, editor) => (editorRef.current = editor)}
                 init={{
-                    height: 600,
+                    height: 550,
+                    width:1200,
                     menubar: true,
                     plugins: [
                         "advlist",
@@ -23,6 +26,7 @@ export default function App() {
                         "lists",
                         "link",
                         "image",
+                        "export",
                         "charmap",
                         "preview",
                         "anchor",
@@ -39,11 +43,11 @@ export default function App() {
                         "undo redo | blocks | " +
                         "bold italic forecolor | alignleft aligncenter " +
                         "alignright alignjustify | bullist numlist outdent indent | " +
-                        "removeformat | help",
+                        "help | fullscreen",
                     content_style:
                         "body { font-family: 'Montserrat', sans-serif; font-size:14px }",
                 }}
-            />
+            /></div>
             <button 
                 className='text-white w-[50%] ml-[25%] mt-4 py-3 rounded-full shadow-xl bg-[#707FDD] hover:bg-indigo-800	' 
             onClick={log}>Save Changes 

@@ -1,3 +1,9 @@
+import ch1 from "../pages/dummy/ch1.pdf"
+import ch2 from "../pages/dummy/ch2.pdf"
+import ch3 from "../pages/dummy/ch3.pdf"
+import ch4 from "../pages/dummy/ch4.pdf"
+import ch5 from "../pages/dummy/ch5.pdf"
+
 export const subjects = [
     {
         id: "General Chemistry",
@@ -40,7 +46,8 @@ export const notes = [
         author: "Tanvi Rahman",
         size: "2.6 MB",
         gen_access: "Public",
-        categories: "🔴🟢"
+        categories: "🔴🟢",
+        link: ch1
     },
     {
         id: 1,
@@ -48,7 +55,8 @@ export const notes = [
         author: "Tanvi Rahman",
         size: "1.6 MB",
         gen_access: "Public",
-        categories: "🟢🔵"
+        categories: "🟢🔵",
+        link: ch2
     },
     {
         id: 2,
@@ -56,7 +64,8 @@ export const notes = [
         author: "Tanvi Rahman",
         size: "3.8 MB",
         gen_access: "Public",
-        categories: "🔵🟣"
+        categories: "🔵🟣",
+        link: ch3
     },
     {
         id: 3,
@@ -64,7 +73,8 @@ export const notes = [
         author: "Tanvi Rahman",
         size: "2.6 MB",
         gen_access: "Public",
-        categories: "🟣"
+        categories: "🟣",
+        link: ch4
     },
     {
         id: 4,
@@ -72,6 +82,91 @@ export const notes = [
         author: "Tanvi Rahman",
         size: "3.0 MB",
         gen_access: "Private",
-        categories: "🟠🟡"
+        categories: "🟠🟡",
+        link: ch5
     }
+]
+
+export const friends = [
+    {
+        id: 0,
+        name: "Sabahat Sami",
+        grad: "Spring 2024",
+        shared_courses: ["Design Project", "Artificial Intelligence"],
+        pfp: "https://media.licdn.com/dms/image/C4D03AQFwzb4_V7DTPw/profile-displayphoto-shrink_800_800/0/1623803824719?e=1706140800&v=beta&t=JI_0IXhNQfXo8NzcOMGl23kEpeHrKiyRHytXWE9L_HQ"
+    },
+    
+    {
+        id: 1,
+        name: "Ivan Lin",
+        grad: "Spring 2024",
+        shared_courses: ["Design Project", "Artificial Intelligence"],
+        pfp: "https://static.vecteezy.com/system/resources/previews/009/952/572/original/male-profile-picture-vector.jpg"
+    },
+    
+    {
+        id: 2,
+        name: "Calvin Chu",
+        grad: "Spring 2024",
+        shared_courses: ["Design Project", "Databases"],
+        pfp: "https://media.licdn.com/dms/image/C4D03AQHk3j0rHLQ-Pw/profile-displayphoto-shrink_800_800/0/1633475563057?e=1706140800&v=beta&t=EgaN9DlNzT64OpUW3IFmqkjUc7MhaJL1hGhUUhqum08"
+    },
+    
+    {
+        id: 3,
+        name: "Kelvin Sapathy",
+        grad: "Spring 2024",
+        shared_courses: [],
+        pfp: "https://media.licdn.com/dms/image/D4E03AQGm0Xva-Uzegg/profile-displayphoto-shrink_800_800/0/1684698861812?e=1706140800&v=beta&t=95Jc7a2l9nUV1yFiE3k7sZI_zenn2jiagvHePb_welI"
+    },
+    
+    {
+        id: 4,
+        name: "Ibteda Hossain",
+        grad: "Spring 2024",
+        shared_courses: ["Digital Logic"],
+        pfp: "https://media.licdn.com/dms/image/D4E03AQFSTum4Qoidpg/profile-displayphoto-shrink_400_400/0/1693138968157?e=1706140800&v=beta&t=yn-zxjpi3XMUqJQMuMomGMrYnFNhfdCBG0KzY_tbRKk"
+    },
+]
+
+export const may_know = [
+    {
+        id: 0,
+        name: "Iven Zuo",
+        grad: "Spring 2025",
+        shared_courses: ["Intro to Biology", "Intro to Problem Solving"],
+        pfp: "https://media.licdn.com/dms/image/D4E03AQEH-4itoQ9DBA/profile-displayphoto-shrink_400_400/0/1685489488302?e=1706140800&v=beta&t=p0Cr6-x57oCFXmPaaelsws5mrcGKlavUvA1xuyp6j38"
+    },
+    
+    {
+        id: 1,
+        name: "George Howard",
+        grad: "Spring 2024",
+        shared_courses: ["Design Project", "Software Engineering"],
+        pfp: "https://media.licdn.com/dms/image/D4D03AQE5la7Z4nCZTA/profile-displayphoto-shrink_800_800/0/1678245177538?e=2147483647&v=beta&t=MBAh4QrMdFPf8bnmThprtmy0kMKiQp40XMBYCIeS9fo"
+    },
+    
+    {
+        id: 2,
+        name: "Okpe Ogedegbe",
+        grad: "Spring 2024",
+        shared_courses: ["Computer Architecture", "Algorithms"],
+        pfp: "https://media.licdn.com/dms/image/D4E03AQFNq3PAllum6Q/profile-displayphoto-shrink_400_400/0/1696180224019?e=1706140800&v=beta&t=fZMRUC3goaXj6jqkPiNZ28fSCbsvcfRwr6L1a-rpaHo"
+    },
+    
+    {
+        id: 3,
+        name: "Amy Fouzia",
+        grad: "Fall 2023",
+        shared_courses: ["Elementary Arabic", ""],
+        pfp: "https://media.istockphoto.com/id/477333976/photo/female-portrait-icon-as-avatar-or-profile-picture.jpg?s=612x612&w=0&k=20&c=GL-wQYLh_UlsqeFvkgCwQXWFDFTtz0ApA1e7WPZdfYY="
+    },
+    
+    {
+        id: 4,
+        name: "Rakeeb Hossain",
+        grad: "Fall 2023",
+        shared_courses: ["Digital Logic", "Artificial Intelligence"],
+        pfp: "https://media.licdn.com/dms/image/D4E03AQHdVvFe8TqZPQ/profile-displayphoto-shrink_400_400/0/1694293103606?e=1706140800&v=beta&t=fxiRBHnpDlbmMilDmbE_YUfI-VfEkQORp5Av1piSfLA"
+    },
 ]

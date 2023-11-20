@@ -14,19 +14,14 @@ const Docs = () => {
         <div className='h-screen'>
             <div className=''>
                 <div className='text-center'>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
+                    <br/><br/><br/><br/><br/><br/>
                     <h2 className='text-5xl font-bold underline text-[#424B5A]'>
                         Courses
                     </h2>
                     <Container>
                         {subjects.map((item) => (
                             <div>
-                                <a href=""><h2 className='text-xl underline text-[#424B5A] hover:text-[#1250b8] hover:font-black'>{item.id}</h2></a>
+                                <a href="/notes"><h2 className='text-xl underline text-[#424B5A] hover:text-[#1250b8] hover:font-black'>{item.id}</h2></a>
                                 <Document item={item} key={item.id} />
                             </div>
                                 

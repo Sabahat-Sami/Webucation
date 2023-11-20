@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from fastapi import APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from controllers import user_controller, document_controller, course_controller
+from controllers import user_controller, document_controller, course_controller, auth
 import uvicorn
 
 app = FastAPI()
 app.include_router(user_controller.router)
 app.include_router(document_controller.router)
 app.include_router(course_controller.router)
+app.include_router(auth.router)
 
 '''
 origins = [

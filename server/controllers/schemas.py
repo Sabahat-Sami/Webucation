@@ -5,6 +5,15 @@ class LoginInput(BaseModel):
     email: str 
     password: str 
 
+
+class SignupInput(BaseModel):
+    email: str
+    password: str
+    confirmPassword: str
+    fname: str
+    lname: str
+    phone_num: str
+
 class FriendInput(BaseModel):
     user_id: int
     friend_id: int

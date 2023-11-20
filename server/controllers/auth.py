@@ -5,9 +5,10 @@ from jose.exceptions import JOSEError
 from fastapi import HTTPException, status, Depends, APIRouter
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
+from config import SECRET_KEY as sk
 
 
-SECRET_KEY = "un2t90587tnyg2347t2348t7g4c83m0b14t3068v4hcg1uris3ey9ksdi13j1ro"
+SECRET_KEY = sk
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

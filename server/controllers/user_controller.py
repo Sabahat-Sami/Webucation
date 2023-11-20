@@ -2,11 +2,19 @@ from connection import cursor, conn
 from psycopg2 import Error
 import bcrypt
 
-from fastapi import APIRouter, Response, Request, HTTPException, status
+from fastapi import APIRouter, Response, Request, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from controllers.schemas import *
+from typing import Annotated
+
+from controllers.auth import has_access, create_access_token
 
 router = APIRouter()
+
+# TO ADD A TOKEN DEPENDENCY, ADD USER_DEPENDENCY TO PARAMETERS
+# EX. async def some_method(user: user_dependency, email: str, password: str):
+
+user_dependency = Annotated[dict, Depends(has_access)]
 
 """
 DB Creation Endpoints
@@ -29,7 +37,7 @@ async def create_profile(body: SignupInput):
 
         print(email, username, password)
         
-        
+
         sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) VALUES (%s, %s, %s, %s, %s, %s, %s);'''
         data = (email, username, password, fname, lname, phone_number, about)
         a = cursor.execute(sql, data)
@@ -94,17 +102,13 @@ async def create_profile_course(body: CourseInput):
 DB Retrieval Endpoints
 """
 # Log in
-@router.get("/user/get_profile/")
+@router.get("/user/log_in")
 async def get_profile(email: str, password: str):
     try:
         # Gets users from database
         sql = '''SELECT * FROM Profile WHERE email = %s;'''
         cursor.execute(sql,(email,)) 
         result = cursor.fetchone()
-        column_names = [desc[0] for desc in cursor.description]
-        out = dict(zip(column_names, result))
-        print(out)
-
         # If no user exists
         if (not result):
             print("No user exists")
@@ -113,6 +117,48 @@ async def get_profile(email: str, password: str):
         # If user exists
         else:
             # Success
+            if compare_password(password, result[3]):
+                print("Success")
+                # Generate token
+                token = await create_access_token(email)
+                return {"token": token}
+
+            # Wrong password
+            else:
+                print("Wrong password")
+                raise HTTPException(status_code=404, detail="Item not found")
+
+    except Error as e:
+        print("Unable to serach for db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
+
+
+
+# Get profile
+@router.get("/user/get_profile/")
+async def get_profile(email: str, password: str):
+    try:
+        # Gets users from database
+        sql = '''SELECT * FROM Profile WHERE email = %s;'''
+        cursor.execute(sql,(email,)) 
+        result = cursor.fetchone()
+        # If no user exists
+        if (not result):
+            print("No user exists")
+            raise HTTPException(status_code=404, detail="Item not found")
+
+        # If user exists
+        else:
+            # Success
+            column_names = [desc[0] for desc in cursor.description]
+            out = dict(zip(column_names, result))
+            print(out)
+
             if compare_password(password, out['password']):
                 print("Success")
                 del out['password'] # No need to return password
@@ -178,3 +224,5 @@ def encrypt_password(password):
 
 def compare_password(password, hashed_password):
     return bcrypt.hashpw(password.encode('utf8'), hashed_password.encode('utf8')) == hashed_password.encode('utf8')
+
+    

@@ -8,8 +8,8 @@ import React from 'react'
 
 const Register = () => {
   const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
-  const [name, setName] = useState('')
+  const [fname, setFname] = useState('')
+  const [lname, setLname] = useState('')
   const [number, setNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -23,8 +23,8 @@ const Register = () => {
         email: email,
         password: password,
         confirmPassword: confirmPassword,
-        fname: username,
-        lname: name,
+        fname: fname,
+        lname: lname,
         phone_num: number,
       },
       )
@@ -74,10 +74,10 @@ const Register = () => {
                   required
                   type='text'
                   className='w-full p-3 ml-3 rounded-3xl pl-5'
-                  placeholder='Username'
-                  value={username}
-                  id='username'
-                  onChange={e => setUsername(e.target.value)}
+                  placeholder='First Name'
+                  value={fname}
+                  id='fname'
+                  onChange={e => setFname(e.target.value)}
                 />
               </div>
 
@@ -87,10 +87,10 @@ const Register = () => {
                   required
                   type='text'
                   className='w-full p-3 ml-3 rounded-3xl pl-5'
-                  placeholder='Full Name'
-                  value={name}
-                  id='name'
-                  onChange={e => setName(e.target.value)}
+                  placeholder='Last Name'
+                  value={lname}
+                  id='lname'
+                  onChange={e => setLname(e.target.value)}
                 />
               </div>
 
@@ -132,14 +132,14 @@ const Register = () => {
                   onChange={e => setConfirmPassword(e.target.value)}
                 />
               </div>
+              <button
+                type='submit'
+                className='text-white bg-[#707FDD] w-full text-center py-3 rounded-2xl  my-1 shadow-xl'
+              >
+                Register
+              </button>
             </form>
           </div>
-          <button
-            type='submit'
-            className='text-white bg-[#707FDD] w-full text-center py-3 rounded-2xl  my-1 shadow-xl'
-          >
-            Register
-          </button>
         </div>
       </div>
     </div>

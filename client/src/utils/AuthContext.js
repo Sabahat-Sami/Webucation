@@ -32,8 +32,14 @@ export const AuthProvider = ({ children }) => {
             }
         };
 
-        if (token) {
+        if (token != "undefined") {
+            //console.log("here");
             fetchData();
+        }
+        else {
+            setLoading(false);
+            setUser(null);
+            removeCookie('jwt');
         }
         // eslint-disable-next-line
     }, []);

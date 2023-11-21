@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
             }
         };
 
-        if (token != "undefined") {
+        if (token !== "undefined") {
             //console.log("here");
             fetchData();
         }

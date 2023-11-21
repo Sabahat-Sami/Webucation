@@ -103,7 +103,7 @@ DB Retrieval Endpoints
 """
 # Log in
 @router.get("/user/log_in")
-async def get_profile(email: str, password: str):
+async def log_in(email: str, password: str):
     try:
         # Gets users from database
         sql = '''SELECT * FROM Profile WHERE email = %s;'''
@@ -139,8 +139,9 @@ async def get_profile(email: str, password: str):
 
 # Get profile
 @router.get("/user/get_profile/")
-async def get_profile(email: str, password: str):
+async def get_profile(user: user_dependency):
     try:
+        email = user.get('username')
         # Gets users from database
         sql = '''SELECT * FROM Profile WHERE email = %s;'''
         cursor.execute(sql,(email,)) 
@@ -155,17 +156,10 @@ async def get_profile(email: str, password: str):
             # Success
             column_names = [desc[0] for desc in cursor.description]
             out = dict(zip(column_names, result))
+            del out["password"] # leave out password
             print(out)
 
-            if compare_password(password, out['password']):
-                print("Success")
-                del out['password'] # No need to return password
-                return out
-
-            # Wrong password
-            else:
-                print("Wrong password")
-                raise HTTPException(status_code=404, detail="Item not found")
+            return out
 
     except Error as e:
         print("Unable to serach for db entry", e)

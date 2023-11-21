@@ -53,6 +53,7 @@ async def has_access(credentials: HTTPAuthorizationCredentials= Depends(security
                                                            "verify_aud": False,
                                                            "verify_iss": False})
         print("payload => ", payload)
+        return payload
     except JOSEError as e:  # catches any exception
         raise HTTPException(
             status_code=401,

@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
-import { NewspaperIcon } from '@heroicons/react/outline'
-import { useAuth } from '../utils/AuthContext';
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { NewspaperIcon } from '@heroicons/react/outline';
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 function Navbar() {
   const navigate = useNavigate()
-  const [nav, setNav] = useState(false);
-  const { user, login, logout } = useAuth();
+  const [isMounted, setIsMounted] = useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
   const handleLogout = () => {
-    logout();
+    removeCookie('jwt');
     navigate('/');
   }
-  // const handleClick = () => {
-  //   setNav(!nav)
-  // };
+  
+  useEffect(() => {
+    setIsMounted(true);
+    return () => {
+      setIsMounted(false);
+    };
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div className='w-screen h-[80px] z-10 bg-[#d9defa] fixed drop-shadow-lg '>
@@ -29,7 +37,7 @@ function Navbar() {
 
         <div className='hidden md:flex pr-4 mr-60'>
           {
-          (user) ? (
+          (cookies.jwt) ? (
             <>
 
             <button className='px-8 py-3 bg-[#424B5A] font-bold text-white rounded-2xl hover:bg-slate-400' onClick={handleLogout}>

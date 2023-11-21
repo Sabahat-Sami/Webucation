@@ -5,9 +5,47 @@ import ch2 from "../pages/dummy/ch2.pdf"
 import ch3 from "../pages/dummy/ch3.pdf"
 import ch4 from "../pages/dummy/ch4.pdf"
 import ch5 from "../pages/dummy/ch5.pdf"
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 export default function Table() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [cookies, removeCookie] = useCookies(['jwt']);
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            axios
+              .get('http://localhost:8080/user/get_profile', {
+                headers: {
+                    Authorization: `Bearer ${cookies.jwt}`
+                },
+              })
+              .then(res => {
+                console.log(res)
+                if (res.status === 200){
+                    console.log("Success")
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                removeCookie('jwt');
+                setTimeout(() => {
+                  navigate('/login');
+                }, 0);
+              })
+          };
+        if (cookies.jwt && cookies.jwt !== "undefined") {
+          fetchProfile();
+        }
+        else {
+            removeCookie('jwt');
+            setTimeout(() => {
+              navigate('/login');
+            }, 0);
+        }
+    }, []);
 
   return (
     <div className='bg-white'>

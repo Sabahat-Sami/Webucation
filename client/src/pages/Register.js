@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ShieldCheckIcon, IdentificationIcon, MailIcon, UserIcon, PhoneIcon} from '@heroicons/react/outline'
 import { LockClosedIcon } from '@heroicons/react/solid'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie';
+import verifyToken from '../utils/TokenAuth';
+import Loading from '../components/Loading.js'
 
 import React from 'react'
 
@@ -13,7 +16,38 @@ const Register = () => {
   const [number, setNumber] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchTokenValidity = async () => {
+      var payload;
+      try {
+        payload = await verifyToken(cookies.jwt);
+      }
+      catch (error) {
+        payload = null;
+      } 
+      finally {
+        setLoading(false);
+      }
+      if (payload == null) {
+        removeCookie('jwt');
+      }
+      else {
+        navigate('/');
+      }
+    };
+    if (cookies.jwt !== "undefined") {
+      //console.log("here");
+      fetchTokenValidity();
+    }
+    else {
+        setLoading(false);
+        removeCookie('jwt');
+    }
+  }, [cookies]);
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -43,7 +77,12 @@ const Register = () => {
   }
 
   return (
-    <div className='flex items-center h-screen'>
+    <>
+    {
+      (loading) ? (
+        <Loading />
+      ) : (
+        <div className='flex items-center h-screen'>
       <div className='max-w-[1240px] mx-auto'>
         <div className='p-5'>
           <div className='text-center'>
@@ -143,6 +182,10 @@ const Register = () => {
         </div>
       </div>
     </div>
+      )
+    }
+    </>
+    
   )
 }
 

@@ -20,7 +20,7 @@ const Docs = () => {
                     </h2>
                     <Container>
                         {subjects.map((item) => (
-                            <div>
+                            <div key={item.id}>
                                 <a href="/notes"><h2 className='text-xl underline text-[#424B5A] hover:text-[#1250b8] hover:font-black'>{item.id}</h2></a>
                                 <Document item={item} key={item.id} />
                             </div>

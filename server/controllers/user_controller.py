@@ -137,8 +137,6 @@ async def get_profile(email: str, password: str):
                          "message": "Internal Server Error"}
             )
 
-
-
 # Get profile
 @router.get("/user/get_profile/")
 async def get_profile(email: str, password: str):

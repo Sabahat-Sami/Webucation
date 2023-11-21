@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { useRef, useState, useEffect, useContext } from 'react'
 import { MailIcon } from '@heroicons/react/outline'
 import { LockClosedIcon } from '@heroicons/react/solid'
+import { useAuth } from '../utils/AuthContext';
+import { useCookies } from 'react-cookie';
 import axios from 'axios'
 
 const Login = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const { login } = useAuth();
+  const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -22,8 +26,10 @@ const Login = () => {
       .then(res => {
         console.log(res)
         if (res.status === 200){
-        navigate('/admin')
-      }
+          setCookie('jwt', res.data.token);
+          login(email);
+          navigate('/admin')
+        }
       })
       .catch(err => {
         console.log(err)

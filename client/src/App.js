@@ -6,12 +6,23 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.js'
 import Table from './components/Table.js'
 import Network from './pages/Network.js'
+import ReactLoading from "react-loading";
+import { useAuth } from './utils/AuthContext';
 
 function App() {
+  const { loading } = useAuth();
   return (
     <div className='App bg-gradient-to-b from-[#BBC2FA] to-white'>
-      <Navbar />
+    {
+      (loading) ? (
+      <div className="loader flex items-center justify-center h-screen">
+        <ReactLoading type="spin" color="#0000FF"
+                height={100} width={50} />
+      </div>
+      ) : (
+      <>
       <Router>
+        <Navbar />
         <Routes>
           <Route exact path='/' element={<Home />}></Route>
           <Route exact path='/register' element={<Register />} />
@@ -22,6 +33,9 @@ function App() {
           <Route exact path='*' element={<Home />}></Route>
         </Routes>
       </Router>
+      </>
+      )
+    }
     </div>
   )
 }

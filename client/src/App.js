@@ -8,6 +8,7 @@ import Table from './components/Table.js'
 import Network from './pages/Network.js'
 import ReactLoading from "react-loading";
 import { useAuth } from './utils/AuthContext';
+import RouteAuth from "./utils/RouteAuth";
 
 function App() {
   const { loading } = useAuth();
@@ -24,13 +25,22 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
+          {/* Unprotected Routes */}
           <Route exact path='/' element={<Home />}></Route>
           <Route exact path='/register' element={<Register />} />
           <Route exact path='/login' element={<Login />} />
-          <Route exact path='/newNote' element={<TextEditor />} />
-          <Route exact path='/notes' element={<Table />} />
-          <Route exact path='/network' element={<Network />} />
           <Route exact path='*' element={<Home />}></Route>
+          {/* Protected Routes */}
+          <Route element={<RouteAuth />}>
+            <Route exact path='/newNote' element={<TextEditor />} />
+          </Route>
+          <Route element={<RouteAuth />}>
+            <Route exact path='/notes' element={<Table />} />
+          </Route>
+          <Route element={<RouteAuth />}>
+            <Route exact path='/network' element={<Network />} />
+          </Route>
+
         </Routes>
       </Router>
       </>

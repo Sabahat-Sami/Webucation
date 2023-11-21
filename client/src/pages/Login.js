@@ -28,7 +28,9 @@ const Login = () => {
         if (res.status === 200){
           setCookie('jwt', res.data.token);
           login(email);
-          navigate('/admin')
+          setTimeout(() => {
+            navigate('/admin');
+          }, 0);
         }
       })
       .catch(err => {

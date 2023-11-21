@@ -32,7 +32,7 @@ function Navbar() {
           (user) ? (
             <>
 
-            <button className='px-8 py-3 bg-[#424B5A] font-bold text-white rounded-2xl hover:bg-slate-400' onClick={logout}>
+            <button className='px-8 py-3 bg-[#424B5A] font-bold text-white rounded-2xl hover:bg-slate-400' onClick={handleLogout}>
               Log Out
             </button>
 

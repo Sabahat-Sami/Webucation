@@ -15,37 +15,42 @@ export default function Table() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const fetchProfile = async () => {
-            axios
-              .get('http://localhost:8080/user/get_profile', {
-                headers: {
-                    Authorization: `Bearer ${cookies.jwt}`
-                },
-              })
-              .then(res => {
-                console.log(res)
-                if (res.status === 200){
-                    console.log("Success")
-                }
-              })
-              .catch(err => {
-                console.log(err);
-                removeCookie('jwt');
-                setTimeout(() => {
-                  navigate('/login');
-                }, 0);
-              })
-          };
-        if (cookies.jwt && cookies.jwt !== "undefined") {
-          fetchProfile();
-        }
-        else {
+      let isMounted = true;
+  
+      const fetchProfile = async () => {
+        try {
+          const res = await axios.get('http://localhost:8080/user/get_profile', {
+            headers: {
+              Authorization: `Bearer ${cookies.jwt}`,
+            },
+          });
+  
+          console.log(res);
+  
+          if (res.status === 200 && isMounted) {
+            console.log('Success');
+          }
+        } catch (err) {
+          console.log(err);
+  
+          if (isMounted) {
             removeCookie('jwt');
-            setTimeout(() => {
-              navigate('/login');
-            }, 0);
+            navigate('/login');
+            return;
+          }
         }
-    }, []);
+      };
+  
+      if (cookies.jwt && cookies.jwt !== 'undefined') {
+        fetchProfile();
+      } else {
+        navigate('/login');
+      }
+  
+      return () => {
+        isMounted = false;
+      };
+    }, [cookies, navigate]);
 
   return (
     <div className='bg-white'>

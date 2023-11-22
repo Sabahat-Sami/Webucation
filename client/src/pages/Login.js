@@ -1,7 +1,7 @@
 import React from 'react'
 import Loading from '../components/Loading.js'
 import { useNavigate } from 'react-router-dom'
-import { useRef, useState, useEffect, useContext } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { MailIcon } from '@heroicons/react/outline'
 import { LockClosedIcon } from '@heroicons/react/solid'
 import { useCookies } from 'react-cookie';
@@ -9,11 +9,11 @@ import verifyToken from '../utils/TokenAuth';
 import axios from 'axios'
 
 const Login = () => {
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchTokenValidity = async () => {
@@ -31,7 +31,9 @@ const Login = () => {
         removeCookie('jwt');
       }
       else {
-        navigate('/');
+        setTimeout(() => {
+          navigate('/');
+        }, 0);
       }
     };
     if (cookies.jwt !== "undefined") {

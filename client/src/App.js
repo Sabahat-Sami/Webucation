@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.js'
 import Table from './components/Table.js'
 import Network from './pages/Network.js'
-// import { AuthProvider, useAuth } from './utils/AuthContext';
 // import RouteAuth from "./utils/RouteAuth";
 
 function App() {
@@ -17,12 +16,13 @@ function App() {
         <Routes>
           <Route exact path='/register' element={<Register />} />
           <Route exact path='/login' element={<Login />} />
-          <Route exact path='/newNote' element={<TextEditor />} />
 
           <Route exact path='/' element={<Home />}></Route>
           <Route exact path='*' element={<Home />}></Route>
 
           <Route exact path='/notes' element={<Table />} />
+          
+          <Route exact path='/newNote' element={<TextEditor />} />
           <Route exact path='/network' element={<Network />} />
 
         </Routes>

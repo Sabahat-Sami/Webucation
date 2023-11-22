@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NewspaperIcon } from '@heroicons/react/outline';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 function Navbar() {
-  const navigate = useNavigate()
-  const [isMounted, setIsMounted] = useState(true);
+  const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+
   const handleLogout = () => {
     removeCookie('jwt');
     navigate('/');
-  }
-  
-  useEffect(() => {
-    setIsMounted(true);
-    return () => {
-      setIsMounted(false);
-    };
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
+  };
 
   return (
     <div className='w-screen h-[80px] z-10 bg-[#d9defa] fixed drop-shadow-lg '>
@@ -36,41 +25,39 @@ function Navbar() {
         </div>
 
         <div className='hidden md:flex pr-4 mr-60'>
-          {
-          (cookies.jwt) ? (
+          {cookies.jwt ? (
             <>
-
-            <button className='px-8 py-3 bg-[#424B5A] font-bold text-white rounded-2xl hover:bg-slate-400' onClick={handleLogout}>
-              Log Out
-            </button>
-
+              <button
+                className='px-8 py-3 bg-[#424B5A] font-bold text-white rounded-2xl hover:bg-slate-400'
+                onClick={handleLogout}
+              >
+                Log Out
+              </button>
             </>
           ) : (
             <>
               <a
-            href='/login'
-            className='border-none bg-transparent text-[#424B5A] font-bold mr-4 flex justify-center items-center'
-          >
-            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
-              Log In
-            </button>
-          </a>
-          <a 
-            href='/register'
-            className='border-none bg-transparent text-[#424B5A] font-bold mr-4 flex justify-center items-center'
-          >
-            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
-              Sign Up
-            </button>
-          </a>
+                href='/login'
+                className='border-none bg-transparent text-[#424B5A] font-bold mr-4 flex justify-center items-center'
+              >
+                <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
+                  Log In
+                </button>
+              </a>
+              <a
+                href='/register'
+                className='border-none bg-transparent text-[#424B5A] font-bold mr-4 flex justify-center items-center'
+              >
+                <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
+                  Sign Up
+                </button>
+              </a>
             </>
-          )
-          }
-          
+          )}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

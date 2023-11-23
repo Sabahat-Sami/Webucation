@@ -15,8 +15,6 @@ export default function Table() {
     const navigate = useNavigate()
 
     useEffect(() => {
-      let isMounted = true;
-  
       const fetchProfile = async () => {
         try {
           const res = await axios.get('http://localhost:8080/user/get_profile', {
@@ -27,17 +25,13 @@ export default function Table() {
   
           console.log(res);
   
-          if (res.status === 200 && isMounted) {
+          if (res.status === 200) {
             console.log('Success');
           }
         } catch (err) {
           console.log(err);
-  
-          if (isMounted) {
-            removeCookie('jwt');
-            navigate('/login');
-            return;
-          }
+          removeCookie('jwt');
+          navigate('/login');
         }
       };
   
@@ -46,10 +40,6 @@ export default function Table() {
       } else {
         navigate('/login');
       }
-  
-      return () => {
-        isMounted = false;
-      };
     }, [cookies, navigate]);
 
   return (

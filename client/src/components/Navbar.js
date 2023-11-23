@@ -27,6 +27,14 @@ function Navbar() {
         <div className='hidden md:flex pr-4 mr-60'>
           {cookies.jwt ? (
             <>
+              <a
+                href='/profile'
+                className='border-none bg-transparent text-[#424B5A] font-bold mr-4 flex justify-center items-center'
+              >
+                <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
+                  Profile
+                </button>
+              </a>
               <button
                 className='px-8 py-3 bg-[#424B5A] font-bold text-white rounded-2xl hover:bg-slate-400'
                 onClick={handleLogout}

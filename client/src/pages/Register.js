@@ -36,16 +36,18 @@ const Register = () => {
         removeCookie('jwt');
       }
       else {
-        navigate('/');
+        setTimeout(() => {
+          navigate('/');
+        }, 0);
       }
     };
-    if (cookies.jwt !== "undefined") {
+    if (cookies.jwt && cookies.jwt !== "undefined") {
       //console.log("here");
       fetchTokenValidity();
     }
     else {
-        setLoading(false);
-        removeCookie('jwt');
+      setLoading(false);
+      removeCookie('jwt');
     }
   }, [cookies]);
 

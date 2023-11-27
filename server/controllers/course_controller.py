@@ -2,11 +2,16 @@ from connection import cursor, conn
 from psycopg2 import Error, Binary
 import bcrypt
 
-from fastapi import APIRouter, Response, Request, HTTPException, status
+from fastapi import APIRouter, Response, Request, HTTPException, status, Depends, Header
 from fastapi.responses import JSONResponse
 from controllers.schemas import *
+from typing import Annotated
+
+from controllers.auth import has_access
 
 router = APIRouter()
+
+user_dependency = Annotated[dict, Depends(has_access)]
 
 """
 DB Creation Endpoints
@@ -85,9 +90,9 @@ async def create_course_document(body: CourseDocumentInput):
 DB Retrieval Endpoints
 """
 @router.get("/course/get_course/")
-async def get_course(course_id: int):
+async def get_course(user: user_dependency, course_id: int = Header(None, convert_underscores=False)):
     try:
-        sql = '''SELECT * FROM Course WHERE course_id = %d;'''
+        sql = '''SELECT * FROM Course WHERE course_id = %s;'''
         data = (course_id,)
         cursor.execute(sql, data)
         result = cursor.fetchall()

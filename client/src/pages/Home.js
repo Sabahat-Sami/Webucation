@@ -4,7 +4,8 @@ import Docs from './Docs'
 const Home = () => {
   return (
     <div>
-      <Docs/>
+      <br/><br/><br/><br/>
+      Temporary Home Page (Should have not signed in and signed in version)
     </div>
   )
 }

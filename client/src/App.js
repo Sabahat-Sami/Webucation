@@ -5,8 +5,8 @@ import TextEditor from './pages/TextEditor.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.js'
 import Table from './components/Table.js'
+import Docs from './pages/Docs.js'
 import Network from './pages/Network.js'
-// import RouteAuth from "./utils/RouteAuth";
 
 function App() {
   return (
@@ -17,9 +17,10 @@ function App() {
           <Route exact path='/register' element={<Register />} />
           <Route exact path='/login' element={<Login />} />
 
-          <Route exact path='/' element={<Home />}></Route>
-          <Route exact path='*' element={<Home />}></Route>
+          <Route exact path='/' element={<Home />} />
+          <Route exact path='*' element={<Home />} />
 
+          <Route exact path='/courses' element={<Docs />} />
           <Route exact path='/notes' element={<Table />} />
           
           <Route exact path='/newNote' element={<TextEditor />} />

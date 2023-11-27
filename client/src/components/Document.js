@@ -12,7 +12,7 @@ const Info = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,12 +24,11 @@ const Container = styled.div`
   flex: 1;
   margin: 5px;
   min-width: 280px;
-  height: 350px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 110px;
   position: relative;
-
+  background-color: red;
+  border-radius: 1rem;
+  padding-top: 20px;
   &:hover ${Info}{
     opacity: 1;
   }
@@ -49,7 +48,7 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px;
+  margin: 50px 10px 10px 10px;
   transition: all 0.5s ease;
   &:hover {
     background-color: #e9f5f5;
@@ -60,7 +59,8 @@ const Icon = styled.div`
 const Document = ({ item }) => {
     return (
         <Container>
-            <Image src={item.img} />
+            <a className="relative z-10" href="/notes"><h2 className='text-xl underline text-[#424B5A] hover:text-[#1250b8] hover:font-black'>{item.title}</h2></a>
+            {/* <Image src={item.img} /> */}
             <Info>
                 <Icon>
                     <Archive />

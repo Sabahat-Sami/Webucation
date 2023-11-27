@@ -10,6 +10,7 @@ function Navbar() {
   const handleLogout = () => {
     removeCookie('jwt');
     navigate('/');
+    window.location.reload(false);
   };
 
   return (

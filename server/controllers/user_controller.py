@@ -2,7 +2,7 @@ from connection import cursor, conn
 from psycopg2 import Error
 import bcrypt
 
-from fastapi import APIRouter, Response, Request, HTTPException, status, Depends
+from fastapi import APIRouter, Response, Request, HTTPException, status, Depends, Header
 from fastapi.responses import JSONResponse
 from controllers.schemas import *
 from typing import Annotated
@@ -191,10 +191,11 @@ async def get_profile_friends(user_id: int):
             )
 
 @router.get("/user/get_profile_course/")
-async def get_profile_course(user_id: int):
+async def get_profile_course(user: user_dependency, user_id: int = Header(None, convert_underscores=False)):
     try:
-        sql = '''SELECT * FROM ProfileCourse WHERE user_id = %d;'''
+        sql = '''SELECT * FROM ProfileCourse WHERE user_id = %s;'''
         data = (user_id,)
+        print(data)
         cursor.execute(sql, data)
         result = cursor.fetchall()
         column_names = [desc[0] for desc in cursor.description]

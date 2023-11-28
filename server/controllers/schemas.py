@@ -15,11 +15,9 @@ class SignupInput(BaseModel):
     phone_num: str
 
 class FriendInput(BaseModel):
-    user_id: int
     friend_id: int
 
 class ProfileCourseInput(BaseModel):
-    user_id: int
     course_id: int
 
 class DocumentInput(BaseModel):

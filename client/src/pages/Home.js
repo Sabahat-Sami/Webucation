@@ -2,6 +2,7 @@ import React from 'react'
 import Docs from './Docs'
 
 const Home = () => {
+  // should prob check for valid token here
   return (
     <div>
       <br/><br/><br/><br/>

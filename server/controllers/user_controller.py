@@ -78,17 +78,20 @@ async def create_profile_friends(body: FriendInput):
             )
 
 @router.post("/user/create_profile_course/", response_model=None)
-async def create_profile_course(body: ProfileCourseInput):
+async def create_profile_course(user: user_dependency, body: ProfileCourseInput):
     try:
-        user_id = body.user_id
+        email = user.get('username')
         course_id = body.course_id
 
-        print(user_id, course_id)
-        sql = "INSERT INTO ProfileCourse(user_id, course_id) VALUES (%s, %s);"
-        data = (user_id, course_id)
+        sql = '''INSERT INTO ProfileCourse (user_id, course_id)
+VALUES (
+  (SELECT user_id FROM Profile WHERE email = %s),
+  %s
+);'''
+        data = (email, course_id)
         cursor.execute(sql, data)
         conn.commit()
-        return {"user_id": user_id}
+        return {"email": email, "course_id": course_id, "status": "Success"}
     
     except Error as e:
         print("Unable to create db entry", e)
@@ -140,28 +143,28 @@ async def log_in(email: str, password: str):
             )
 
 # Get profile
-@router.get("/user/get_profile/")
-async def get_profile(user: user_dependency):
-    try:
-        email = user.get('username')
-        # Gets users from database
-        sql = '''SELECT * FROM Profile WHERE email = %s;'''
-        cursor.execute(sql,(email,)) 
-        result = cursor.fetchone()
-        # If no user exists
-        if (not result):
-            print("No user exists")
-            raise HTTPException(status_code=404, detail="Item not found")
+# @router.get("/user/get_profile/")
+# async def get_profile(user: user_dependency):
+#     try:
+#         email = user.get('username')
+#         # Gets users from database
+#         sql = '''SELECT * FROM Profile WHERE email = %s;'''
+#         cursor.execute(sql,(email,)) 
+#         result = cursor.fetchone()
+#         # If no user exists
+#         if (not result):
+#             print("No user exists")
+#             raise HTTPException(status_code=404, detail="Item not found")
 
-        # If user exists
-        else:
-            # Success
-            column_names = [desc[0] for desc in cursor.description]
-            out = dict(zip(column_names, result))
-            del out["password"] # leave out password
-            print(out)
+#         # If user exists
+#         else:
+#             # Success
+#             column_names = [desc[0] for desc in cursor.description]
+#             out = dict(zip(column_names, result))
+#             del out["password"] # leave out password
+#             print(out)
 
-            return out
+#             return out
 
     except Error as e:
         print("Unable to serach for db entry", e)
@@ -192,11 +195,22 @@ async def get_profile_friends(user_id: int):
                          "message": "Internal Server Error"}
             )
 
-@router.get("/user/get_profile_course/")
-async def get_profile_course(user: user_dependency, user_id: int = Header(None, convert_underscores=False)):
+@router.get("/user/get_user_courses/")
+async def get_user_courses(user: user_dependency):
     try:
-        sql = '''SELECT * FROM ProfileCourse WHERE user_id = %s;'''
-        data = (user_id,)
+        email = user.get('username')
+        sql = '''SELECT Course.*
+FROM Course
+WHERE Course.course_id IN (
+    SELECT ProfileCourse.course_id
+    FROM ProfileCourse
+    WHERE ProfileCourse.user_id = (
+        SELECT user_id
+        FROM Profile
+        WHERE email = %s
+    )
+);'''
+        data = (email,)
         print(data)
         cursor.execute(sql, data)
         result = cursor.fetchall()

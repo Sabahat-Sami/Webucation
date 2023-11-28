@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState, useEffect, useRef } from 'react'
 import styled from "styled-components";
 import { subjects } from './data'
 import Document from "../components/Document";
@@ -73,7 +73,6 @@ const Add = styled.div`
 
 const Docs = () => {
     const [cookies, removeCookie] = useCookies(['jwt']);
-    const [userID, setUserID] = useState(null);
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate()
@@ -81,6 +80,7 @@ const Docs = () => {
 
     const classes = useStyles();
     const [openAdd, setOpenAdd] = useState(false);
+    const modalRef = useRef();
     const [code, setCode] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -115,24 +115,28 @@ const Docs = () => {
               }
           }
         } catch (err) {
-          //window.location.reload(false);
+          window.location.reload(false);
         }
       };
 
       const addCourse = async (id) => {
         axios
         .post('http://localhost:8080/user/create_profile_course', {
-          user_id: `${userID}`,
-          course_id: `${id}`
+          course_id: id,
         },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.jwt}`,
+          },
+        }
         )
         .then(res => {
           console.log(res)
           if (res.status === 200){
-            window.location.reload(false);
             setCode('');
             setTitle('');
             setDescription('');
+            window.location.reload(false);
           }
         })
         .catch(err => {
@@ -165,79 +169,33 @@ const Docs = () => {
     useEffect(() => {
         let isMounted = true;
       
-        const fetchProfile = async () => {
+        const fetchCourses = async () => {
           try {
-            const res = await axios.get('http://localhost:8080/user/get_profile', {
+            const res = await axios.get('http://localhost:8080/user/get_user_courses', {
               headers: {
                 Authorization: `Bearer ${cookies.jwt}`,
               },
             });
       
             if (isMounted && res.status === 200) {
-              setUserID(res.data.user_id);
-              fetchCourses(res.data.user_id);
+              console.log(res.data)
+              Object.values(res.data).forEach((value) => {
+                setCourses(prev => [...prev, value]);
+              });
+              setLoading(false);
             }
           } catch (err) {
             console.log(err);
-            removeCookie('jwt');
-            navigate('/login');
-          }
-        };
-      
-        const fetchCourses = async (id) => {
-          try {
-            let path = "";
-
-            switch(courseType) {
-              case "my-courses":
-                path = 'http://localhost:8080/user/get_profile_course'
-                break;
-              default:
-                navigate("/");
+            if (err.response.status === 401) {
+              removeCookie('jwt');
+              navigate('/login');
             }
-
-            const res = await axios.get(path, {
-              headers: {
-                Authorization: `Bearer ${cookies.jwt}`,
-                user_id: `${id}`,
-              },
-            });
-      
-            if (isMounted && res.status === 200) {
-                setCourses([]);
-                Object.values(res.data).forEach((value) => {
-                    fetchCourseInfo(value.course_id);
-                });
-            }
-          } catch (err) {
-            if (isMounted) {
-                setCourses((prev) => [...prev]);
-                setLoading(false);
-            }
-          }
-        };
-      
-        const fetchCourseInfo = async (id) => {
-          try {
-            const res = await axios.get('http://localhost:8080/course/get_course', {
-              headers: {
-                Authorization: `Bearer ${cookies.jwt}`,
-                course_id: `${id}`,
-              },
-            });
-      
-            if (isMounted && res.status === 200) {
-                setCourses((prev) => [...prev, res.data]);
-                setLoading(false);
-            }
-          } catch (err) {
-            setCourses((prev) => [...prev]);
-            setLoading(false);
           }
         };
       
         if (cookies.jwt && cookies.jwt !== 'undefined') {
-          fetchProfile();
+          setCourses([]);
+          fetchCourses();
         } else {
           navigate('/login');
         }
@@ -262,8 +220,8 @@ const Docs = () => {
                             </h2>
                             <Container>
                                 {courses.map((item) => (
-                                    <div key={item[0].course_id}>
-                                        <Document item={item[0]} path={"my-notes"}/>
+                                    <div key={item.course_id}>
+                                        <Document item={item} path={"my-notes"}/>
                                     </div>        
                                 ))}
                                 {
@@ -286,6 +244,7 @@ const Docs = () => {
                       open={openAdd}
                       onClose={handleClose}
                       closeAfterTransition
+                      ref={modalRef}
                       BackdropComponent={Backdrop}
                       BackdropProps={{
                         timeout: 500,

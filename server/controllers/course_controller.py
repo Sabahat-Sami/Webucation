@@ -89,30 +89,30 @@ async def create_course_document(body: CourseDocumentInput):
 """
 DB Retrieval Endpoints
 """
-@router.get("/course/get_course/")
-async def get_course(user: user_dependency, course_id: int = Header(None, convert_underscores=False)):
-    try:
-        sql = '''SELECT * FROM Course WHERE course_id = %s;'''
-        data = (course_id,)
-        cursor.execute(sql, data)
-        result = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
-        return out
+# @router.get("/course/get_course/")
+# async def get_course(user: user_dependency, course_id: int = Header(None, convert_underscores=False)):
+#     try:
+#         sql = '''SELECT * FROM Course WHERE course_id = %s;'''
+#         data = (course_id,)
+#         cursor.execute(sql, data)
+#         result = cursor.fetchall()
+#         column_names = [desc[0] for desc in cursor.description]
+#         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+#         return out
     
-    except Error as e:
-        print("Unable to serach for db entry", e)
-        return JSONResponse(
-                status_code=500,
-                content={
-                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                         "message": "Internal Server Error"}
-            )
+#     except Error as e:
+#         print("Unable to serach for db entry", e)
+#         return JSONResponse(
+#                 status_code=500,
+#                 content={
+#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                          "message": "Internal Server Error"}
+#             )
 
 @router.get("/course/find_course/")
 async def find_course(user: user_dependency, code: str = Header(None), title: str = Header(None)):
     try:
-        sql = '''SELECT * FROM Course WHERE code = %s AND title = %s;'''
+        sql = '''SELECT * FROM Course WHERE code = %s AND UPPER(title) = UPPER(%s);'''
         data = (code, title)
         cursor.execute(sql, data)
         result = cursor.fetchall()

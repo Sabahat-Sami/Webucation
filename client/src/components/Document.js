@@ -56,10 +56,10 @@ const Icon = styled.div`
   }
 `;
 
-const Document = ({ item }) => {
+const Document = ({ item, path }) => {
     return (
         <Container>
-            <a className="relative z-10" href="/notes"><h2 className='text-xl underline text-[#424B5A] hover:text-[#1250b8] hover:font-black'>{item.title}</h2></a>
+            <a className="relative z-10" href={"/notes/"+path+"/"+item.course_id}><h2 className='text-xl underline text-[#424B5A] hover:text-[#1250b8] hover:font-black'>{item.title}</h2></a>
             {/* <Image src={item.img} /> */}
             <Info>
                 <Icon>

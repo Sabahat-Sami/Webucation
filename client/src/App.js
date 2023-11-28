@@ -20,8 +20,9 @@ function App() {
           <Route exact path='/' element={<Home />} />
           <Route exact path='*' element={<Home />} />
 
-          <Route exact path='/courses' element={<Docs />} />
-          <Route exact path='/notes' element={<Table />} />
+          {/* Where type refers to mine, shared, or public */}
+          <Route exact path='/courses/:courseType' element={<Docs />} />
+          <Route exact path='/notes/:noteType/:courseID' element={<Table />} />
           
           <Route exact path='/newNote' element={<TextEditor />} />
           <Route exact path='/network' element={<Network />} />

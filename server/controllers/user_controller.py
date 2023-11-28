@@ -78,12 +78,14 @@ async def create_profile_friends(body: FriendInput):
             )
 
 @router.post("/user/create_profile_course/", response_model=None)
-async def create_profile_course(body: CourseInput):
+async def create_profile_course(body: ProfileCourseInput):
     try:
         user_id = body.user_id
         course_id = body.course_id
-        sql = "INSERT INTO ProfileCourse(user_id, friend_id) VALUES (%d, %d);"
-        data = (int(user_id), int(course_id))
+
+        print(user_id, course_id)
+        sql = "INSERT INTO ProfileCourse(user_id, course_id) VALUES (%s, %s);"
+        data = (user_id, course_id)
         cursor.execute(sql, data)
         conn.commit()
         return {"user_id": user_id}

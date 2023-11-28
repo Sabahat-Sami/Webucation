@@ -60,7 +60,7 @@ const Login = () => {
         if (res.status === 200){
           setCookie('jwt', res.data.token);
           setTimeout(() => {
-            navigate('/admin');
+            navigate('/');
           }, 0);
         }
       })

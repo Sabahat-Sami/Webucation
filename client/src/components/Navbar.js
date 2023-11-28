@@ -14,7 +14,7 @@ function Navbar() {
   };
 
   return (
-    <div className='w-screen h-[80px] z-10 bg-[#d9defa] fixed drop-shadow-lg '>
+    <div className='w-screen h-[80px] z-10 bg-[#d9defa] fixed drop-shadow-lg z-20'>
       <div className='px-2 flex justify-between items-center w-full h-full'>
         <div className='flex items-center ml-60 text-[#424B5A]'>
           <NewspaperIcon className='w-10 ' />

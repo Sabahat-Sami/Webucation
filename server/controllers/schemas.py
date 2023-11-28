@@ -18,7 +18,7 @@ class FriendInput(BaseModel):
     user_id: int
     friend_id: int
 
-class CourseInput(BaseModel):
+class ProfileCourseInput(BaseModel):
     user_id: int
     course_id: int
 

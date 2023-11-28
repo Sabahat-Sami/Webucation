@@ -46,6 +46,14 @@ export default function Table() {
     <div className='bg-white'>
       <br/><br/><br/>
       <div className='flex mt-12 w-full px-3'>
+      <a
+        href='/courses/my-courses'
+        className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
+      >
+        <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
+          Back
+        </button>
+      </a>
         <div className='flex justify-between items-center w-full h-full'>
           <div>
             <h1 className='text-3xl text-[#424B5A]'>Notes</h1>

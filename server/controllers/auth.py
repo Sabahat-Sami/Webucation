@@ -47,9 +47,9 @@ async def verify_access_token(token: str):
 
 async def has_access(credentials: HTTPAuthorizationCredentials= Depends(security)):
     token = credentials.credentials
-
+    print(token)
     try:
-        payload = jwt.decode(token, key='secret', options={"verify_signature": False,
+        payload = jwt.decode(token, SECRET_KEY, options={"verify_signature": False,
                                                            "verify_aud": False,
                                                            "verify_iss": False})
         print("payload => ", payload)

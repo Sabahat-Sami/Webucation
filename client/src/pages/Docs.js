@@ -76,7 +76,6 @@ const Docs = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate()
-    const { courseType } = useParams();
 
     const classes = useStyles();
     const [openAdd, setOpenAdd] = useState(false);
@@ -97,6 +96,7 @@ const Docs = () => {
       e.preventDefault()
 
       const findCourse = async () => {
+
         try {
           const res = await axios.get('http://localhost:8080/course/find_course', {
             headers: {
@@ -168,20 +168,10 @@ const Docs = () => {
 
     useEffect(() => {
         let isMounted = true;
-      
+        console.log(cookies.jwt)
         const fetchCourses = async () => {
-          let path = ""
-
-          switch(courseType) {
-            case "my-courses":
-              path = 'http://localhost:8080/user/get_user_courses'
-              break;
-            default:
-              navigate("/");
-          }
-
           try {
-            const res = await axios.get(path, {
+            const res = await axios.get("http://localhost:8080/user/get_user_courses", {
               headers: {
                 Authorization: `Bearer ${cookies.jwt}`,
               },
@@ -234,15 +224,11 @@ const Docs = () => {
                                         <Document item={item} path={"my-notes"}/>
                                     </div>        
                                 ))}
-                                {
-                                  (courseType === "my-courses") ? (
                                     <Add>
                                       <Icon>
                                         <AddCircleOutline onClick={handleOpen}/>
                                       </Icon>
                                     </Add>
-                                  ) : (<></>)
-                                }
                                 
                             </Container>
                         </div>

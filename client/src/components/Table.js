@@ -22,22 +22,40 @@ export default function Table() {
 
       const fetchDocuments = async () => {
         let path = "";
+        let options = {};
 
         switch(noteType) {
           case "my-notes":
             path = 'http://localhost:8080/user/get_course_documents';
+            options = {
+              headers: {
+                Authorization: `Bearer ${cookies.jwt}`,
+                course_id: `${courseID}`
+              },
+            }
+            break;
+          case "shared":
+            path = "http://localhost:8080/user/get_shared_with_me_documents/"
+            options = {
+              headers: {
+                Authorization: `Bearer ${cookies.jwt}`,
+              },
+            }
+            break;
+          case "public":
+            path = "http://localhost:8080/user/get_course_documents"
+            options = {
+              headers: {
+                Authorization: `Bearer ${cookies.jwt}`,
+              },
+            }
             break;
           default:
             navigate("/")
         }
 
         try {
-          const res = await axios.get(path, {
-            headers: {
-              Authorization: `Bearer ${cookies.jwt}`,
-              course_id: `${courseID}`
-            },
-          });
+          const res = await axios.get(path, options);
   
           if (isMounted && res.status === 200) {
             Object.values(res.data).forEach(value => {
@@ -84,12 +102,16 @@ export default function Table() {
       };
     }, [cookies, navigate]);
 
+    // useEffect(() => {
+    //   console.log(categories);
+    // }, [categories]);
+
   return (
     <div className='bg-white'>
       <br/><br/><br/>
       <div className='flex mt-12 w-full px-3'>
       <a
-        href='/courses/my-courses'
+        href={(noteType === "my-notes") ? '/courses/my-courses' : "/"}
         className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
       >
         <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
@@ -128,6 +150,7 @@ export default function Table() {
               <tr>
                 <th className='px-6 py-2 text-s text-gray-500'>Document Title</th>
                 <th className='px-6 py-2 text-s text-gray-500'>Author</th>
+                {(noteType === "my-notes") ? <></> : <th className='px-6 py-2 text-s text-gray-500'>Course</th>}
                 <th className='px-6 py-2 text-s text-gray-500'>Size</th>
                 <th className='px-6 py-2 text-s text-gray-500'>Gen. Access</th>
                 <th className='px-6 py-2 text-s text-gray-500'>Categories</th>
@@ -144,10 +167,12 @@ export default function Table() {
                     </td>
                   </a> 
                   <td className='px-6 py-4'>{note.first_name + " " + note.last_name}</td>
+                  {(noteType === "my-notes") ? <></> : <td className='px-6 py-4'>{note.course_code + ": " + note.course_name}</td>}
                   <td className='px-6 py-4'>{note.size}</td>
-                  <td className='px-6 py-4'>{note.general_access}</td>
+                  {/* general access: 0 = private, else public */}
+                  <td className='px-6 py-4'>{(note.general_access === 0) ? "Private" : "Public"}</td>
                   <td className='px-6 py-4'>
-                    {categories[note.document_id].map(cat => (
+                    {categories[note.document_id]?.map(cat => (
                       <div>{cat}</div>
                     )
                     )}
@@ -158,10 +183,13 @@ export default function Table() {
             </tbody>
           </table>
         </div>
-        <a href="/newNote" target="_blank"><button
+        {((noteType === "my-notes")) ?
+          <a href="/newNote" target="_blank"><button
           className='text-white font-bold w-[50%] ml-[25%] mt-4 py-3 rounded-full shadow-xl bg-[#707FDD] hover:bg-indigo-800	'
         >+ New Document
-        </button></a>
+        </button></a> : <></>
+        }
+        
       </div>
     </div>
   )

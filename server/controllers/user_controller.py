@@ -275,6 +275,100 @@ WHERE D.document_id IN (
                          "message": "Internal Server Error"}
             )  
 
+@router.get("/user/get_shared_with_me_documents/")
+async def get_shared_with_me_documents(user: user_dependency):
+    try:
+        email = user.get('username')
+        sql = '''SELECT
+    D.document_id,
+    D.title,
+    D.author_id,
+    (
+        SELECT P.fname
+        FROM Profile P
+        WHERE P.user_id = D.author_id
+    ) AS first_name,
+    (
+        SELECT P.lname
+        FROM Profile P
+        WHERE P.user_id = D.author_id
+    ) AS last_name,
+    D.size,
+    D.general_access,
+    (
+        SELECT CD.course_id
+        FROM CourseDocument CD
+        WHERE CD.document_id = D.document_id
+    ) AS course_id,
+    (
+        SELECT C.code
+        FROM Course C
+        WHERE C.course_id = (
+            SELECT CD.course_id
+            FROM CourseDocument CD
+            WHERE CD.document_id = D.document_id
+        )
+    ) AS course_code,
+    (
+        SELECT C.title
+        FROM Course C
+        WHERE C.course_id = (
+            SELECT CD.course_id
+            FROM CourseDocument CD
+            WHERE CD.document_id = D.document_id
+        )
+    ) AS course_name
+FROM
+    Document D
+WHERE
+    D.document_id IN (
+        SELECT
+            PU.document_id
+        FROM
+            PermittedUsers PU
+        WHERE
+            PU.user_id IN (
+                SELECT
+                    user_id
+                FROM
+                    Profile
+                WHERE
+                    email = 'cal.chu@live.com'
+            )
+    )
+AND
+    D.document_id NOT IN (
+        SELECT
+            document_id
+        FROM
+            Document D2
+        WHERE
+            D2.author_id IN (
+                SELECT
+                    user_id
+                FROM
+                    Profile
+                WHERE
+                    email = 'cal.chu@live.com'
+            )
+    )'''
+        data = (email, email)
+        cursor.execute(sql, data)
+        result = cursor.fetchall()
+        print(result)
+        column_names = [desc[0] for desc in cursor.description]
+        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+        return out
+    
+    except Error as e:
+        print("Unable to serach for db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
+
 def encrypt_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf8')
 

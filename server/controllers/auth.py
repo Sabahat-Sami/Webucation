@@ -28,15 +28,32 @@ async def create_access_token(username: str, expires_delta: timedelta = timedelt
     encode.update({'exp': expires})
     return jwt.encode(encode, SECRET_KEY, algorithm = ALGORITHM)
 
+@router.get("/user/verify_token")
+async def verify_access_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, options={"verify_signature": False,
+                                                           "verify_aud": False,
+                                                           "verify_iss": False})
+        print('Token is valid:', payload)
+        return {"payload":payload}
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=401,
+            detail="Session has expired.")
+    except jwt.JWTError as e:
+        raise HTTPException(
+            status_code=401,
+            detail="Session verification failed.")
 
 async def has_access(credentials: HTTPAuthorizationCredentials= Depends(security)):
     token = credentials.credentials
-
+    print(token)
     try:
-        payload = jwt.decode(token, key='secret', options={"verify_signature": False,
+        payload = jwt.decode(token, SECRET_KEY, options={"verify_signature": False,
                                                            "verify_aud": False,
                                                            "verify_iss": False})
         print("payload => ", payload)
+        return payload
     except JOSEError as e:  # catches any exception
         raise HTTPException(
             status_code=401,

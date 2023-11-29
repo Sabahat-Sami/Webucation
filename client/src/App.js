@@ -5,21 +5,32 @@ import TextEditor from './pages/TextEditor.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.js'
 import Table from './components/Table.js'
+import Docs from './pages/Docs.js'
 import Network from './pages/Network.js'
 
 function App() {
   return (
     <div className='App bg-gradient-to-b from-[#BBC2FA] to-white'>
-      <Navbar />
       <Router>
+        <Navbar />
         <Routes>
-          <Route exact path='/' element={<Home />}></Route>
           <Route exact path='/register' element={<Register />} />
           <Route exact path='/login' element={<Login />} />
+
+          <Route exact path='/' element={<Home />} />
+          <Route exact path='*' element={<Home />} />
+
+          {/* Where type refers to mine, shared, or public */}
+          <Route exact path='/courses' element={<Docs />} />
+          {/* <Route exact path='/notes/:noteType/:courseID?' element={<Table />} /> */}
+          <Route path="/notes/:noteType">
+            <Route path=":courseID" element={<Table />} />
+            <Route path="" element={<Table />} />
+          </Route>
+
           <Route exact path='/newNote' element={<TextEditor />} />
-          <Route exact path='/notes' element={<Table />} />
           <Route exact path='/network' element={<Network />} />
-          <Route exact path='*' element={<Home />}></Route>
+
         </Routes>
       </Router>
     </div>

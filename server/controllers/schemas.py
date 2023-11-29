@@ -15,11 +15,9 @@ class SignupInput(BaseModel):
     phone_num: str
 
 class FriendInput(BaseModel):
-    user_id: int
     friend_id: int
 
-class CourseInput(BaseModel):
-    user_id: int
+class ProfileCourseInput(BaseModel):
     course_id: int
 
 class DocumentInput(BaseModel):
@@ -40,7 +38,6 @@ class DocumentCategoryInput(BaseModel):
 class CourseInput(BaseModel):
     code: str
     title: str
-    description: str
 
 class CourseProfessorInput(BaseModel):
     course_id: int

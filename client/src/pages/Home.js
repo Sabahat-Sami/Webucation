@@ -23,6 +23,14 @@ const Home = () => {
         <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
           Shared Notes
         </button>
+      </a><br/>
+      <a
+        href='/notes/public'
+        className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
+      >
+        <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
+          Public Notes
+        </button>
       </a>
     </div>
   )

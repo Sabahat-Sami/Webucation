@@ -151,3 +151,36 @@ async def get_document_category(user: user_dependency, document_id: int = Header
                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
                          "message": "Internal Server Error"}
             )
+
+@router.get("/document/get_public_documents/")
+async def get_public_documents(user: user_dependency):
+    try:
+        email = user.get('username')
+        sql = '''SELECT
+    D.document_id,
+    D.title,
+    D.author_id,
+    (SELECT fname FROM Profile WHERE user_id = D.author_id) AS first_name,
+    (SELECT lname FROM Profile WHERE user_id = D.author_id) AS last_name,
+    D.size,
+    D.general_access,
+    (SELECT code FROM Course WHERE course_id = (SELECT course_id FROM CourseDocument WHERE document_id = D.document_id)) AS course_code,
+    (SELECT title FROM Course WHERE course_id = (SELECT course_id FROM CourseDocument WHERE document_id = D.document_id)) AS course_title
+FROM
+    Document D
+WHERE
+    D.general_access = 1;'''
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+        return out
+    
+    except Error as e:
+        print("Unable to serach for db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )

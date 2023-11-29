@@ -296,11 +296,6 @@ async def get_shared_with_me_documents(user: user_dependency):
     D.size,
     D.general_access,
     (
-        SELECT CD.course_id
-        FROM CourseDocument CD
-        WHERE CD.document_id = D.document_id
-    ) AS course_id,
-    (
         SELECT C.code
         FROM Course C
         WHERE C.course_id = (
@@ -317,7 +312,7 @@ async def get_shared_with_me_documents(user: user_dependency):
             FROM CourseDocument CD
             WHERE CD.document_id = D.document_id
         )
-    ) AS course_name
+    ) AS course_title
 FROM
     Document D
 WHERE
@@ -333,7 +328,7 @@ WHERE
                 FROM
                     Profile
                 WHERE
-                    email = 'cal.chu@live.com'
+                    email = %s
             )
     )
 AND
@@ -349,7 +344,7 @@ AND
                 FROM
                     Profile
                 WHERE
-                    email = 'cal.chu@live.com'
+                    email = %s
             )
     )'''
         data = (email, email)

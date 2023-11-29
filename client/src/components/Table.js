@@ -43,7 +43,7 @@ export default function Table() {
             }
             break;
           case "public":
-            path = "http://localhost:8080/user/get_course_documents"
+            path = "http://localhost:8080/document/get_public_documents"
             options = {
               headers: {
                 Authorization: `Bearer ${cookies.jwt}`,
@@ -167,9 +167,9 @@ export default function Table() {
                     </td>
                   </a> 
                   <td className='px-6 py-4'>{note.first_name + " " + note.last_name}</td>
-                  {(noteType === "my-notes") ? <></> : <td className='px-6 py-4'>{note.course_code + ": " + note.course_name}</td>}
+                  {(noteType === "my-notes") ? <></> : <td className='px-6 py-4'>{note.course_code + ": " + note.course_title}</td>}
                   <td className='px-6 py-4'>{note.size}</td>
-                  {/* general access: 0 = private, else public */}
+                  {/* general access: 0 = private, 1 = public */}
                   <td className='px-6 py-4'>{(note.general_access === 0) ? "Private" : "Public"}</td>
                   <td className='px-6 py-4'>
                     {categories[note.document_id]?.map(cat => (

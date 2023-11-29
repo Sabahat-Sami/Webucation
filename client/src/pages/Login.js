@@ -58,7 +58,6 @@ const Login = () => {
       .then(res => {
         console.log(res)
         if (res.status === 200){
-          console.log(res.data.token)
           setCookie('jwt', res.data.token, {path: "/"});
           setTimeout(() => {
             navigate('/');

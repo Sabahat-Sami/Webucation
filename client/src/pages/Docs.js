@@ -168,7 +168,6 @@ const Docs = () => {
 
     useEffect(() => {
         let isMounted = true;
-        console.log(cookies.jwt)
         const fetchCourses = async () => {
           try {
             const res = await axios.get("http://localhost:8080/user/get_user_courses", {
@@ -272,15 +271,6 @@ const Docs = () => {
                             />
                           </div>
 
-                          <div className='flex block border border-grey-light bg-white w-2/3 p-3 mb-4 rounded-3xl pl-5 shadow-xl'>
-                            <input
-                              type='text'
-                              className='w-full p-3 ml-3 rounded-3xl pl-5'
-                              placeholder='Course Description (optional)'
-                              id='description'
-                              onChange={e => {setDescription(e.target.value)}}
-                            />
-                          </div>
                           <button
                             type='submit'
                             className='text-white bg-[#707FDD] w-1/2 text-center py-3 rounded-2xl  my-1 shadow-xl'

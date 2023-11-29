@@ -228,7 +228,7 @@ WHERE Course.course_id IN (
             )
 
 @router.get("/user/get_course_documents/")
-async def get_user_course_document(user: user_dependency, course_id: int = Header(None, convert_underscores=False)):
+async def get_user_course_documents(user: user_dependency, course_id: int = Header(None, convert_underscores=False)):
     try:
         email = user.get('username')
 

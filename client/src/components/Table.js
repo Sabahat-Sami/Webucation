@@ -1,10 +1,5 @@
 import { React, useState, useEffect } from 'react'
-import { notes } from '../pages/data'
-import ch1 from "../pages/dummy/ch1.pdf"
-import ch2 from "../pages/dummy/ch2.pdf"
-import ch3 from "../pages/dummy/ch3.pdf"
-import ch4 from "../pages/dummy/ch4.pdf"
-import ch5 from "../pages/dummy/ch5.pdf"
+import Loading from '../components/Loading.js'
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
@@ -16,6 +11,8 @@ export default function Table() {
   const { noteType, courseID } = useParams();
   const [docs, setDocs] = useState([]);
   const [categories, setCategories] = useState({});
+  const [course, setCourse] = useState({});
+  const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       let isMounted = true;
@@ -62,6 +59,7 @@ export default function Table() {
               fetchCategories(value.document_id);
               setDocs(prev => [...prev, value]);
             });
+            setLoading(false);
           }
         } catch (err) {
           console.log(err);
@@ -89,10 +87,33 @@ export default function Table() {
           console.log(err);
         }
       };
+
+      const fetchCourse = async () => {
+        try {
+          const res = await axios.get('http://localhost:8080/course/get_course', {
+            headers: {
+              Authorization: `Bearer ${cookies.jwt}`,
+              course_id: `${courseID}`
+            },
+          });
+  
+          if (res.status === 200) {
+            setCourse(res.data[0]);
+            setLoading(false);
+          }
+        } catch (err) {
+          console.log(err);
+          setLoading(false);
+        }
+      };
   
       if (cookies.jwt && cookies.jwt !== 'undefined') {
         setDocs([]);
         fetchDocuments();
+        if (noteType === 'my-notes' && courseID) {
+          setLoading(true);
+          fetchCourse();
+        }
       } else {
         navigate('/login');
       }
@@ -107,7 +128,8 @@ export default function Table() {
     // }, [categories]);
 
   return (
-    <div className='bg-white'>
+    <>
+    {(loading) ? <Loading /> : (<div className='bg-white'>
       <br/><br/><br/>
       <div className='flex mt-12 w-full px-3'>
       <a
@@ -120,7 +142,15 @@ export default function Table() {
       </a>
         <div className='flex justify-between items-center w-full h-full'>
           <div>
-            <h1 className='text-3xl text-[#424B5A]'>Notes</h1>
+            <h1 className='text-3xl text-[#424B5A]'>
+              
+              {(noteType === "my-notes") ? (
+                course.code + ": " + course.title) : 
+              (noteType === "shared") ? ("Notes Shared With Me") :
+              ("Public Notes")
+              }
+              
+              </h1>
           </div>
           <div className='flex border-2 rounded-3xl text-[#424B5A]'>
             <button className='flex items-center justify-center px-4 border-r '>
@@ -191,6 +221,7 @@ export default function Table() {
         }
         
       </div>
-    </div>
+    </div>)}
+    </>
   )
 }

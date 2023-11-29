@@ -38,7 +38,6 @@ class DocumentCategoryInput(BaseModel):
 class CourseInput(BaseModel):
     code: str
     title: str
-    description: str
 
 class CourseProfessorInput(BaseModel):
     course_id: int

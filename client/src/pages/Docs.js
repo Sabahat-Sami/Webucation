@@ -82,7 +82,6 @@ const Docs = () => {
     const modalRef = useRef();
     const [code, setCode] = useState("");
     const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
 
     const handleOpen = () => {
       setOpenAdd(true);
@@ -135,7 +134,6 @@ const Docs = () => {
           if (res.status === 200){
             setCode('');
             setTitle('');
-            setDescription('');
             window.location.reload(false);
           }
         })
@@ -149,7 +147,6 @@ const Docs = () => {
         .post('http://localhost:8080/course/create_course', {
           code: `${code}`,
           title: `${title}`,
-          description: `${description}`
         },
         )
         .then(res => {

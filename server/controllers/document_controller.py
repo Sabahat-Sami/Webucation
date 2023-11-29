@@ -2,11 +2,16 @@ from connection import cursor, conn
 from psycopg2 import Error, Binary
 import bcrypt
 
-from fastapi import APIRouter, Response, Request, HTTPException, status
+from fastapi import APIRouter, Response, Request, HTTPException, status, Depends, Header
 from fastapi.responses import JSONResponse
 from controllers.schemas import *
+from typing import Annotated
+
+from controllers.auth import has_access
 
 router = APIRouter()
+
+user_dependency = Annotated[dict, Depends(has_access)]
 
 """
 DB Creation Endpoints
@@ -87,50 +92,50 @@ async def create_document_category(body: DocumentCategoryInput):
 """
 DB Retrieval Endpoints
 """
-@router.get("/document/get_document/")
-async def get_document(user_id: int):
-    try:
-        sql = '''SELECT * FROM Document WHERE author_id = %d;'''
-        data = (user_id,)
-        cursor.execute(sql, data)
-        result = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
-        return out
+# @router.get("/document/get_document/")
+# async def get_document(user_id: int):
+#     try:
+#         sql = '''SELECT * FROM Document WHERE author_id = %d;'''
+#         data = (user_id,)
+#         cursor.execute(sql, data)
+#         result = cursor.fetchall()
+#         column_names = [desc[0] for desc in cursor.description]
+#         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+#         return out
     
-    except Error as e:
-        print("Unable to serach for db entry", e)
-        return JSONResponse(
-                status_code=500,
-                content={
-                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                         "message": "Internal Server Error"}
-            )
+#     except Error as e:
+#         print("Unable to serach for db entry", e)
+#         return JSONResponse(
+#                 status_code=500,
+#                 content={
+#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                          "message": "Internal Server Error"}
+#             )
 
-@router.get("/document/get_permitted_users/")
-async def get_permitted_users(document_id: int):
-    try: # can update sql query to just get ids later
-        sql = '''SELECT * FROM PermittedUsers WHERE document_id = %d;'''
-        data = (document_id,)
-        cursor.execute(sql, data)
-        result = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
-        return out
+# @router.get("/document/get_permitted_users/")
+# async def get_permitted_users(document_id: int):
+#     try: # can update sql query to just get ids later
+#         sql = '''SELECT * FROM PermittedUsers WHERE document_id = %d;'''
+#         data = (document_id,)
+#         cursor.execute(sql, data)
+#         result = cursor.fetchall()
+#         column_names = [desc[0] for desc in cursor.description]
+#         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+#         return out
     
-    except Error as e:
-        print("Unable to serach for db entry", e)
-        return JSONResponse(
-                status_code=500,
-                content={
-                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                         "message": "Internal Server Error"}
-            )     
+#     except Error as e:
+#         print("Unable to serach for db entry", e)
+#         return JSONResponse(
+#                 status_code=500,
+#                 content={
+#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                          "message": "Internal Server Error"}
+#             )     
 
 @router.get("/document/get_document_category/")
-async def get_document_category(document_id: int):
-    try: # can update sql query to just get names later
-        sql = '''SELECT * FROM DocumentCategory WHERE document_id = %d;'''
+async def get_document_category(user: user_dependency, document_id: int = Header(None, convert_underscores=False)):
+    try:
+        sql = '''SELECT name FROM DocumentCategory WHERE document_id = %s;'''
         data = (document_id,)
         cursor.execute(sql, data)
         result = cursor.fetchall()

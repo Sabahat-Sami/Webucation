@@ -6,27 +6,44 @@ import ch3 from "../pages/dummy/ch3.pdf"
 import ch4 from "../pages/dummy/ch4.pdf"
 import ch5 from "../pages/dummy/ch5.pdf"
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 
 export default function Table() {
   const [searchTerm, setSearchTerm] = useState('')
   const [cookies, removeCookie] = useCookies(['jwt']);
-    const navigate = useNavigate()
+  const navigate = useNavigate()
+  const { noteType, courseID } = useParams();
+  const [docs, setDocs] = useState([]);
+  const [categories, setCategories] = useState({});
 
     useEffect(() => {
-      const fetchProfile = async () => {
+      let isMounted = true;
+
+      const fetchDocuments = async () => {
+        let path = "";
+
+        switch(noteType) {
+          case "my-notes":
+            path = 'http://localhost:8080/user/get_course_documents';
+            break;
+          default:
+            navigate("/")
+        }
+
         try {
-          const res = await axios.get('http://localhost:8080/user/get_profile', {
+          const res = await axios.get(path, {
             headers: {
               Authorization: `Bearer ${cookies.jwt}`,
+              course_id: `${courseID}`
             },
           });
   
-          console.log(res);
-  
-          if (res.status === 200) {
-            console.log('Success');
+          if (isMounted && res.status === 200) {
+            Object.values(res.data).forEach(value => {
+              fetchCategories(value.document_id);
+              setDocs(prev => [...prev, value]);
+            });
           }
         } catch (err) {
           console.log(err);
@@ -34,12 +51,37 @@ export default function Table() {
           navigate('/login');
         }
       };
+
+      const fetchCategories = async (id) => {
+        try {
+          const res = await axios.get('http://localhost:8080/document/get_document_category', {
+            headers: {
+              Authorization: `Bearer ${cookies.jwt}`,
+              document_id: `${id}`
+            },
+          });
+  
+          if (res.status === 200) {
+            setCategories(prev => {
+                return {...prev, [id]: Object.values(res.data).map(item => item.name)}
+              }
+            );
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      };
   
       if (cookies.jwt && cookies.jwt !== 'undefined') {
-        fetchProfile();
+        setDocs([]);
+        fetchDocuments();
       } else {
         navigate('/login');
       }
+
+      return () => {
+        isMounted = false;
+      };
     }, [cookies, navigate]);
 
   return (
@@ -94,17 +136,22 @@ export default function Table() {
 
             <tbody className='bg-white table-auto'>
 
-              {notes.map(note => (
+              {docs.map(note => (
                 <tr className='hover:bg-slate-100'>
-                  <a href={note.link} target="_blank" rel="noreferrer">
+                  <a href="" target="_blank" rel="noreferrer">
                     <td className='hover:text-blue-500 hover:underline hover:font-bold px-6 py-4 text-sm text-gray-500'>
                       {note.title}
                     </td>
                   </a> 
-                  <td className='px-6 py-4'>{note.author}</td>
+                  <td className='px-6 py-4'>{note.first_name + " " + note.last_name}</td>
                   <td className='px-6 py-4'>{note.size}</td>
-                  <td className='px-6 py-4'>{note.gen_access}</td>
-                  <td className='px-6 py-4'>{note.categories}</td>
+                  <td className='px-6 py-4'>{note.general_access}</td>
+                  <td className='px-6 py-4'>
+                    {categories[note.document_id].map(cat => (
+                      <div>{cat}</div>
+                    )
+                    )}
+                  </td>
                 </tr>
               ))}
 

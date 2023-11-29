@@ -166,34 +166,34 @@ async def log_in(email: str, password: str):
 
 #             return out
 
-    except Error as e:
-        print("Unable to serach for db entry", e)
-        return JSONResponse(
-                status_code=500,
-                content={
-                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                         "message": "Internal Server Error"}
-            )
+#     except Error as e:
+#         print("Unable to serach for db entry", e)
+#         return JSONResponse(
+#                 status_code=500,
+#                 content={
+#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                          "message": "Internal Server Error"}
+#             )
 
-@router.get("/user/get_profile_friends/")
-async def get_profile_friends(user_id: int):
-    try:
-        sql = '''SELECT * FROM ProfileFriends WHERE user_id = %d;'''
-        data = (user_id,)
-        cursor.execute(sql, data)
-        result = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
-        return out
+# @router.get("/user/get_profile_friends/")
+# async def get_profile_friends(user_id: int):
+#     try:
+#         sql = '''SELECT * FROM ProfileFriends WHERE user_id = %d;'''
+#         data = (user_id,)
+#         cursor.execute(sql, data)
+#         result = cursor.fetchall()
+#         column_names = [desc[0] for desc in cursor.description]
+#         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+#         return out
     
-    except Error as e:
-        print("Unable to serach for db entry", e)
-        return JSONResponse(
-                status_code=500,
-                content={
-                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                         "message": "Internal Server Error"}
-            )
+#     except Error as e:
+#         print("Unable to serach for db entry", e)
+#         return JSONResponse(
+#                 status_code=500,
+#                 content={
+#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                          "message": "Internal Server Error"}
+#             )
 
 @router.get("/user/get_user_courses/")
 async def get_user_courses(user: user_dependency):
@@ -226,6 +226,54 @@ WHERE Course.course_id IN (
                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
                          "message": "Internal Server Error"}
             )
+
+@router.get("/user/get_course_documents/")
+async def get_user_course_document(user: user_dependency, course_id: int = Header(None, convert_underscores=False)):
+    try:
+        email = user.get('username')
+
+        print(email, course_id)
+        sql = '''SELECT 
+    D.document_id, 
+    D.title, 
+    D.author_id, 
+    D.size, 
+    D.general_access,
+    (
+        SELECT P.fname
+        FROM Profile P
+        WHERE P.user_id = D.author_id
+        LIMIT 1
+    ) AS first_name,
+    (
+        SELECT P.lname
+        FROM Profile P
+        WHERE P.user_id = D.author_id
+        LIMIT 1
+    ) AS last_name
+FROM Document D
+WHERE D.document_id IN (
+    SELECT CD.document_id
+    FROM CourseDocument CD, Profile P
+    WHERE CD.course_id = %s
+    AND P.email = %s
+    AND P.user_id = D.author_id
+);'''
+        data = (course_id, email)
+        cursor.execute(sql, data)
+        result = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+        return out
+    
+    except Error as e:
+        print("Unable to serach for db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )  
 
 def encrypt_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf8')

@@ -129,42 +129,22 @@ async def find_course(user: user_dependency, code: str = Header(None), title: st
                          "message": "Internal Server Error"}
             )
 
-@router.get("/course/get_course_professor/")
-async def get_course_professor(course_id: int):
-    try:
-        sql = '''SELECT * FROM CourseProfessor WHERE course_id = %d;'''
-        data = (course_id,)
-        cursor.execute(sql, data)
-        result = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
-        return out
+# @router.get("/course/get_course_professor/")
+# async def get_course_professor(course_id: int):
+#     try:
+#         sql = '''SELECT * FROM CourseProfessor WHERE course_id = %d;'''
+#         data = (course_id,)
+#         cursor.execute(sql, data)
+#         result = cursor.fetchall()
+#         column_names = [desc[0] for desc in cursor.description]
+#         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
+#         return out
     
-    except Error as e:
-        print("Unable to serach for db entry", e)
-        return JSONResponse(
-                status_code=500,
-                content={
-                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                         "message": "Internal Server Error"}
-            ) 
-
-@router.get("/course/get_course_document/")
-async def get_course_document(course_id: int):
-    try:
-        sql = '''SELECT * FROM CourseDocument WHERE course_id = %d;'''
-        data = (course_id,)
-        cursor.execute(sql, data)
-        result = cursor.fetchall()
-        column_names = [desc[0] for desc in cursor.description]
-        out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
-        return out
-    
-    except Error as e:
-        print("Unable to serach for db entry", e)
-        return JSONResponse(
-                status_code=500,
-                content={
-                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                         "message": "Internal Server Error"}
-            )  
+#     except Error as e:
+#         print("Unable to serach for db entry", e)
+#         return JSONResponse(
+#                 status_code=500,
+#                 content={
+#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                          "message": "Internal Server Error"}
+#            ) 

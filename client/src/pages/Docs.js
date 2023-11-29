@@ -170,15 +170,25 @@ const Docs = () => {
         let isMounted = true;
       
         const fetchCourses = async () => {
+          let path = ""
+
+          switch(courseType) {
+            case "my-courses":
+              path = 'http://localhost:8080/user/get_user_courses'
+              break;
+            default:
+              navigate("/");
+          }
+
           try {
-            const res = await axios.get('http://localhost:8080/user/get_user_courses', {
+            const res = await axios.get(path, {
               headers: {
                 Authorization: `Bearer ${cookies.jwt}`,
               },
             });
       
             if (isMounted && res.status === 200) {
-              console.log(res.data)
+              //console.log(res.data)
               Object.values(res.data).forEach((value) => {
                 setCourses(prev => [...prev, value]);
               });
@@ -203,7 +213,7 @@ const Docs = () => {
         return () => {
           isMounted = false;
         };
-      }, []);
+      }, [cookies, navigate]);
 
     return (
         <>

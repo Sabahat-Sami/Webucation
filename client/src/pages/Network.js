@@ -6,10 +6,10 @@ const Network = () => {
     <div>
       <h1 className='w-42 text-4xl font-black tracking-tight text-transparent'>Reviews</h1>
       <h1 className='w-42 text-4xl mt-16 mb-4 ml-8 font-black tracking-tight text-gray-900 dark:text-white'>Your Friends</h1>
-      <div className='ml-4 mr-4 mb-32 grid gap-4 grid-cols-4 space-y-5 text-2xl'>
+      <div className='ml-4 mr-4 mb-32 grid gap-4 grid-cols-6 space-y-5 text-2xl'>
         {friends.map((val) => {
           return (
-            <div className='max-w-xl p-6 bg-white border border-slate-300 rounded-lg dark:bg-gray-800 dark:border-gray-700'>
+            <div className='max-w-xs p-6 bg-white border border-slate-300 rounded-lg dark:bg-gray-800 dark:border-gray-700'>
               <h1 className='w-42 mb-5 text-4xl font-black tracking-tight underline decoration-sky-500 text-gray-900 dark:text-white'>{val.name}</h1>
               <img className="rounded-full" src={val.pfp}/>
               <p className='mb-3 mt-3 font-normal text-gray-700'>{val.grad} </p>
@@ -26,10 +26,10 @@ const Network = () => {
       </div>
       
       <h1 className='w-42 text-4xl mt-16 mb-8 ml-8 font-black tracking-tight text-gray-900 dark:text-white '>You may know...</h1>
-      <div className='ml-4 mr-4 mb-32 grid gap-4 grid-cols-4 space-y-5 text-2xl'>
+      <div className='ml-4 mr-4 mb-32 grid gap-4 grid-cols-6 space-y-5 text-2xl'>
         {may_know.map((val) => {
           return (
-            <div className='max-w-xl p-6 bg-white border border-slate-300 rounded-lg dark:bg-gray-800 dark:border-gray-700'>
+            <div className='max-w-xs p-6 bg-white border border-slate-300 rounded-lg dark:bg-gray-800 dark:border-gray-700'>
               <h1 className='w-42 mb-5 text-4xl font-black tracking-tight underline decoration-sky-500 text-gray-900 dark:text-white'>{val.name}</h1>
               <img className="rounded-full" src={val.pfp} />
               <p className='mb-3 mt-3 font-normal text-gray-700'>{val.grad} </p>

@@ -173,14 +173,14 @@ const Register = () => {
                   onChange={e => setConfirmPassword(e.target.value)}
                 />
               </div>
-              <button
-                type='submit'
-                className='text-white bg-[#707FDD] w-full text-center py-3 rounded-2xl  my-1 shadow-xl'
-              >
-                Register
-              </button>
             </form>
           </div>
+          <button
+            type='submit'
+            className='text-white bg-[#707FDD] w-full text-center py-3 rounded-2xl shadow-xl'
+          >
+            Register
+          </button>
         </div>
       </div>
     </div>

@@ -24,8 +24,14 @@ class DocumentInput(BaseModel):
     title: str
     author_id: int
     size: int
-    content: UploadFile
+    content: str
     general_access: int
+    course_id: int
+
+class DocumentUpdateInput(BaseModel):
+    content: str
+    general_access: int
+    title: str
 
 class DocumentPermittedUsersInput(BaseModel):
     document_id: int

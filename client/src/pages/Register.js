@@ -178,6 +178,7 @@ const Register = () => {
           <button
             type='submit'
             className='text-white bg-[#707FDD] w-full text-center py-3 rounded-2xl shadow-xl'
+            onClick={handleSubmit}
           >
             Register
           </button>

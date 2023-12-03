@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react'
 import Loading from '../components/Loading.js'
 import { useCookies } from 'react-cookie';
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 
 export default function Table() {
@@ -189,13 +189,13 @@ export default function Table() {
 
             <tbody className='bg-white table-auto'>
 
-              {docs.map(note => (
+              {(noteType === "my-notes") ? (docs.map(note => (
                 <tr className='hover:bg-slate-100'>
-                  <a href="" target="_blank" rel="noreferrer">
+                  <div onClick={() => {navigate('/editNote', {state: {document_id: note.document_id}})}}>
                     <td className='hover:text-blue-500 hover:underline hover:font-bold px-6 py-4 text-sm text-gray-500'>
                       {note.title}
                     </td>
-                  </a> 
+                    </div>
                   <td className='px-6 py-4'>{note.first_name + " " + note.last_name}</td>
                   {(noteType === "my-notes") ? <></> : <td className='px-6 py-4'>{note.course_code + ": " + note.course_title}</td>}
                   <td className='px-6 py-4'>{note.size}</td>
@@ -207,17 +207,34 @@ export default function Table() {
                     )
                     )}
                   </td>
-                </tr>
-              ))}
+                </tr>))) : ((docs.map(note => (
+                <tr className='hover:bg-slate-100'>
+                  <div onClick={() => {navigate('/viewNote', {state: {document_id: note.document_id}})}}>
+                    <td className='hover:text-blue-500 hover:underline hover:font-bold px-6 py-4 text-sm text-gray-500'>
+                      {note.title}
+                    </td>
+                  </div>
+                  <td className='px-6 py-4'>{note.first_name + " " + note.last_name}</td>
+                  {(noteType === "my-notes") ? <></> : <td className='px-6 py-4'>{note.course_code + ": " + note.course_title}</td>}
+                  <td className='px-6 py-4'>{note.size}</td>
+                  {/* general access: 0 = private, 1 = public */}
+                  <td className='px-6 py-4'>{(note.general_access === 0) ? "Private" : "Public"}</td>
+                  <td className='px-6 py-4'>
+                    {categories[note.document_id]?.map(cat => (
+                      <div>{cat}</div>
+                    )
+                    )}
+                  </td>
+                </tr>))))
+              }
 
             </tbody>
           </table>
         </div>
         {((noteType === "my-notes")) ?
-          <a href="/newNote" target="_blank"><button
-          className='text-white font-bold w-[50%] ml-[25%] mt-4 py-3 rounded-full shadow-xl bg-[#707FDD] hover:bg-indigo-800	'
+        <button onClick={() => {navigate("/newNote", {state:{courseID: courseID}})}} className='text-white font-bold w-[50%] ml-[25%] mt-4 py-3 rounded-full shadow-xl bg-[#707FDD] hover:bg-indigo-800	'
         >+ New Document
-        </button></a> : <></>
+        </button> : <></>
         }
         
       </div>

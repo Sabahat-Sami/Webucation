@@ -68,7 +68,7 @@ async def create_course_document(body: CourseDocumentInput):
         course_id = body.course_id
         document_id = body.document_id
 
-        sql = "INSERT INTO CourseDoucment(course_id, document_id) VALUES (%d, %d);"
+        sql = "INSERT INTO CourseDocument(course_id, document_id) VALUES (%d, %d);"
         data = (int(course_id), int(document_id))
 
         cursor.execute(sql, data)

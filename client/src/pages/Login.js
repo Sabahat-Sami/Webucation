@@ -58,7 +58,9 @@ const Login = () => {
       .then(res => {
         console.log(res)
         if (res.status === 200){
+          console.log(res);
           setCookie('jwt', res.data.token, {path: "/"});
+          setCookie('user_id', res.data.user_id, {path: "/"})
           setTimeout(() => {
             navigate('/');
           }, 0);

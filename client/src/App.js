@@ -2,6 +2,7 @@ import Register from './pages/Register.js'
 import Login from './pages/Login.js'
 import Home from './pages/Home.js'
 import TextEditor from './pages/TextEditor.js'
+import TextViewer from './pages/TextViewer.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.js'
 import Table from './components/Table.js'
@@ -29,6 +30,8 @@ function App() {
           </Route>
 
           <Route exact path='/newNote' element={<TextEditor />} />
+          <Route path='/editNote' element={<TextEditor />}/>
+          <Route path='/viewNote' element={<TextViewer />}/>
           <Route exact path='/network' element={<Network />} />
 
         </Routes>

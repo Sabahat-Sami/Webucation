@@ -3,7 +3,7 @@ import Docs from './Docs'
 
 const Home = () => {
                       // should prob check for valid token here
-  const valid = false; // ^set `valid` when you check for valid token; logged in = true
+  const valid = true; // ^set `valid` when you check for valid token; logged in = true
 
   return (
     <div>

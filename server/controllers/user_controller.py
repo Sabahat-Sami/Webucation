@@ -126,7 +126,7 @@ async def log_in(email: str, password: str):
                 print("Success")
                 # Generate token
                 token = await create_access_token(email)
-                return {"token": token}
+                return {"token": token, "user_id": result[0]}
 
             # Wrong password
             else:

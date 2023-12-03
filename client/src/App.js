@@ -7,6 +7,8 @@ import Navbar from './components/Navbar.js'
 import Table from './components/Table.js'
 import Docs from './pages/Docs.js'
 import Network from './pages/Network.js'
+import Profile from './pages/Profile.js'
+import EditProfile from './pages/EditProfile.js'
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
 
           <Route exact path='/newNote' element={<TextEditor />} />
           <Route exact path='/network' element={<Network />} />
+          <Route exact path='/profile' element={<Profile />} />
+          <Route exact path='/editProfile' element={<EditProfile />} />
 
         </Routes>
       </Router>

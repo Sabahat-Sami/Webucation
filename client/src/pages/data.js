@@ -101,7 +101,7 @@ export const friends = [
         name: "Ivan Lin",
         grad: "Spring 2024",
         shared_courses: ["Design Project", "Artificial Intelligence"],
-        pfp: "https://static.vecteezy.com/system/resources/previews/009/952/572/original/male-profile-picture-vector.jpg"
+        pfp: "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
     },
     
     {
@@ -159,7 +159,7 @@ export const may_know = [
         name: "Amy Fouzia",
         grad: "Fall 2023",
         shared_courses: ["Elementary Arabic", ""],
-        pfp: "https://media.istockphoto.com/id/477333976/photo/female-portrait-icon-as-avatar-or-profile-picture.jpg?s=612x612&w=0&k=20&c=GL-wQYLh_UlsqeFvkgCwQXWFDFTtz0ApA1e7WPZdfYY="
+        pfp: "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
     },
     
     {

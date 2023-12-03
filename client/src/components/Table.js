@@ -13,7 +13,8 @@ export default function Table() {
   const [categories, setCategories] = useState({});
   const [course, setCourse] = useState({});
   const [loading, setLoading] = useState(true);
-
+  const [file, setFile] = useState();
+  const [fileContent, setFileContent] = useState('');
     useEffect(() => {
       let isMounted = true;
 
@@ -127,6 +128,40 @@ export default function Table() {
     //   console.log(categories);
     // }, [categories]);
 
+  const handleChange = (e) => {
+    setFile(e.target.files[0]);
+  }
+  
+  const uploadFile = (e) => {
+    e.preventDefault();
+    const reader = new FileReader();
+    console.log(file);
+    reader.onload = () => {
+      setFileContent(reader.result)
+      try{
+        axios.post('http://localhost:8080/document/create_document', {
+          title: file.name,
+          general_access: 1,
+          author_id: cookies.user_id,
+          size: file.size,
+          content: reader.result,
+          course_id: courseID
+      }, {
+          headers: {
+              Authorization: `Bearer ${cookies.jwt}`,
+          }
+      }).then(res => {
+          if (res.status === 200 ) {
+              navigate("/");
+          }
+      }).catch(err => console.log(err))
+  }
+    catch (e){
+      console.log(e);
+    }
+    };
+    reader.readAsBinaryString(file);
+  }
   return (
     <>
     {(loading) ? <Loading /> : (<div className='bg-white'>
@@ -232,9 +267,15 @@ export default function Table() {
           </table>
         </div>
         {((noteType === "my-notes")) ?
+        <>
         <button onClick={() => {navigate("/newNote", {state:{courseID: courseID}})}} className='text-white font-bold w-[50%] ml-[25%] mt-4 py-3 rounded-full shadow-xl bg-[#707FDD] hover:bg-indigo-800	'
         >+ New Document
-        </button> : <></>
+        </button> 
+        <form>
+          <h1>React File Upload</h1>
+          <input type="file" onChange={handleChange}/>
+          <button type="submit" onClick={uploadFile}>Upload</button>
+        </form></> : <></>
         }
         
       </div>

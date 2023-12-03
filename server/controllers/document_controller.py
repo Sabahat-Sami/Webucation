@@ -199,16 +199,12 @@ async def get_document(user: user_dependency, Document_id: int = Header(None, co
     try:
         sql = '''SELECT * FROM document WHERE document_id = %s;'''
         data = (Document_id,)
-        print(Document_id)
         cursor.execute(sql, data)
         result = cursor.fetchall()
         column_names = [desc[0] for desc in cursor.description]
-        print(column_names)
-        print(result)
         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
         out[0]['content'] = bytes(out[0]['content']).decode('utf-8')
         data = out[0]['content']
-        print(data)
         return out[0]
     
     except Error as e:

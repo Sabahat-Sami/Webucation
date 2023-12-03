@@ -4,6 +4,7 @@ import Docs from './Docs'
 const Home = () => {
                       // should prob check for valid token here
   const valid = true; // ^set `valid` when you check for valid token; logged in = true
+  const user = "Tanvi"; // set this to the user's first name
 
   return (
     <div>
@@ -11,30 +12,50 @@ const Home = () => {
       {valid ? (
         <>
           <br />
-          <a
-            href='/courses'
-            className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
-          >
-            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
-              My Courses
-            </button>
-          </a><br />
-          <a
-            href='/notes/shared'
-            className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
-          >
-            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
-              Shared Notes
-            </button>
-          </a><br />
-          <a
-            href='/notes/public'
-            className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
-          >
-            <button className='px-8 py-3 bg-[#424B5A] text-white rounded-2xl hover:bg-slate-400'>
-              Public Notes
-            </button>
-          </a>
+          <p className='text-center text-6xl underline mb-8'>Welcome {user}!</p>
+          <p className='text-center text-3xl  mb-8'>What would you like to do?</p>
+          <div className='ml-[32%] text-2xl space-y-4'>
+            <a
+              href='/courses'
+              className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
+            >
+              <button className='w-[50%] py-4 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:w-[55%] hover:py-5 hover:ml-[-2%]'>
+                My Courses
+              </button>
+            </a><br />
+            <a
+              href='/notes/shared'
+              className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
+            >
+              <button className='mt-8 w-[50%] py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:w-[55%] hover:py-5 hover:ml-[-2%]'>
+                Shared Documents
+              </button>
+            </a><br />
+            <a
+              href='/notes/public'
+              className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
+            >
+              <button className='mt-8 w-[50%] py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:w-[55%] hover:py-5 hover:ml-[-2%]'>
+                Public Notes
+              </button>
+            </a>
+            <a
+              href='/profile'
+              className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
+            >
+              <button className='mt-8 w-[50%] py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:w-[55%] hover:py-5 hover:ml-[-2%]'>
+                My Account
+              </button>
+            </a>
+            <a
+              href='/network'
+              className='border-none bg-transparent text-[#424B5A] font-bold mr-4'
+            >
+              <button className='mt-8 w-[50%] py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:w-[55%] hover:py-5 hover:ml-[-2%]'>
+                My Network
+              </button>
+            </a>
+          </div>
         </>
       ) : (
         <>
@@ -47,10 +68,12 @@ const Home = () => {
                 <a href='/login'>
                   <button className='px-8 ml-[10%] py-3 bg-transparent outline outline-offset-2 outline-1 outline-gray-400 text-xl text-[#a6aff8] rounded-xl hover:bg-gray-200 hover:underline'>Go to Home</button>
                 </a> 
-                <p className='mt-4 mr-72'>Don't have an account?</p>
-                <a href='/register'>
-                  <button className='px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-xl hover:bg-blue-800 hover:underline'>Try Webucation</button>
-                </a> 
+                <div className='mr-72'>
+                  <p className='mt-4'>Don't have an account?</p>
+                  <a href='/register'>
+                    <button className='px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-xl hover:bg-blue-800 hover:underline'>Try Webucation</button>
+                  </a> 
+                </div>
               </div>
           </div>
         </>

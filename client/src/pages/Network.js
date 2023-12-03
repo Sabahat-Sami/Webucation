@@ -38,7 +38,7 @@ const Network = () => {
                   {course}
                 </li>
               ))}   </p>
-              <button className='place-content-center px-8 text-sm py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:cursor-pointer'>Connect</button>
+              <button className='place-content-center px-8 text-sm py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:cursor-pointer'>+ Connect</button>
             </div>
           )
         })}

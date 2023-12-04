@@ -35,7 +35,7 @@ class DocumentUpdateInput(BaseModel):
 
 class DocumentPermittedUsersInput(BaseModel):
     document_id: int
-    user_id: int
+    email: str
 
 class DocumentCategoryInput(BaseModel):
     document_id: int

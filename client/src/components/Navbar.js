@@ -8,9 +8,10 @@ function Navbar() {
   const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
   const handleLogout = () => {
-    removeCookie('jwt');
-    navigate('/');
-    window.location.reload(false);
+    removeCookie('jwt', { path: '/' });
+    setTimeout(() => {
+      navigate('/login');
+    }, 0);
   };
 
   return (

@@ -4,6 +4,8 @@ import {
     Archive,
 } from "@material-ui/icons";
 import styled from "styled-components";
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 const Info = styled.div`
   opacity: 0;
@@ -26,7 +28,8 @@ const Container = styled.div`
   min-width: 280px;
   height: 110px;
   position: relative;
-  background-color: red;
+  background-color: rgba(59, 130, 246, 0.5); 
+  backdrop-filter: blur(10px); 
   border-radius: 1rem;
   padding-top: 20px;
   &:hover ${Info}{
@@ -57,19 +60,39 @@ const Icon = styled.div`
 `;
 
 const Document = ({ item, path }) => {
+    const [cookies, removeCookie] = useCookies(['jwt']);
+
+    const deleteCourse = async (id) => {
+      try{
+        axios.delete('http://localhost:8080/user/delete_profile_course', {
+          headers: {
+            Authorization: `Bearer ${cookies.jwt}`,
+            course_id: `${id}`,
+          }
+        }).then((res) => {
+          if(res.status === 200){
+            window.location.reload(false);
+          }
+        }).catch(err => console.log(err))
+      }
+      catch (e){
+        console.log(e);
+      }
+    };
+
     return (
         <Container>
             <a className="relative z-10" href={"/notes/"+path+"/"+item.course_id}><h2 className='text-xl underline text-[#424B5A] hover:text-[#1250b8] hover:font-black'>{item.title}</h2></a>
             {/* <Image src={item.img} /> */}
             <Info>
-                <Icon>
+                {/* <Icon>
                     <Archive />
-                </Icon>
-                <Icon>
+                </Icon> */}
+                {/* <Icon>
                     <FolderOpenOutlined />
-                </Icon>
+                </Icon> */}
                 <Icon>
-                    <DeleteOutline />
+                    <DeleteOutline onClick={() => deleteCourse(item.course_id)}/>
                 </Icon>
             </Info>
         </Container>

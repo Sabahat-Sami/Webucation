@@ -240,3 +240,32 @@ async def update_document(user: user_dependency, body: DocumentUpdateInput, Docu
                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
                          "message": "Internal Server Error"}
             )
+
+@router.delete("/document/delete_document/")
+async def update_document(user: user_dependency, Document_id: int = Header(None, convert_underscores=False), Course_id: int = Header(None, convert_underscores=False)):
+    try:
+        sql = '''DELETE FROM CourseDocument WHERE course_id = %s AND document_id = %s'''
+        data = (Course_id, Document_id)
+        cursor.execute(sql, data)
+        conn.commit()
+
+        sql = '''DELETE FROM PermittedUsers WHERE document_id = %s'''
+        data = (Document_id,)
+        cursor.execute(sql, data)
+        conn.commit()
+        
+        sql = '''DELETE FROM Document WHERE document_id = %s'''
+        data = (Document_id,)
+        cursor.execute(sql, data)
+        conn.commit()
+
+        return {"status":"Deleted"}
+    
+    except Error as e:
+        print("Unable to update db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )

@@ -10,10 +10,11 @@ const TextEditor = () =>{
     const [access, setAccess] = useState("public");
     const [content, setContent] = useState("");
     const [cookies, removeCookie] = useCookies(['jwt']);
+    const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const data = location.state
-    let isEditing = false;
+
     useEffect(() => {
         if(data.hasOwnProperty("document_id")){
             axios.get('http://localhost:8080/document/get_document', {
@@ -24,7 +25,7 @@ const TextEditor = () =>{
             }).then((res) => {
                 console.log(res)
                 console.log(data.document_id)
-                isEditing = true;
+                setIsEditing(true);
                 setTitle(res.data.title)
                 setAccess(res.data.general_access)
                 setContent(res.data.content)

@@ -364,6 +364,32 @@ AND
                          "message": "Internal Server Error"}
             )
 
+"""
+DB Edit Endpoints
+"""
+@router.delete("/user/delete_profile_course/")
+async def delete_permitted_user(user: user_dependency, course_id: int = Header(None, convert_underscores=False)):
+    email = user.get('username')
+    try:
+        sql = '''DELETE FROM ProfileCourse
+WHERE course_id = %s AND user_id = (
+    SELECT user_id FROM Profile WHERE email = %s
+);'''
+        data = (course_id, email)
+        cursor.execute(sql, data)
+        conn.commit()
+
+        return {"status":"Deleted"}
+    
+    except Error as e:
+        print("Unable to update db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
+
 def encrypt_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf8')
 

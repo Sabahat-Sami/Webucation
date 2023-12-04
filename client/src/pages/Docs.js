@@ -60,8 +60,8 @@ const Add = styled.div`
   height: 110px;
   position: relative;
   border-radius: 1rem;
-  background-color: rgba(169, 169, 169, 0.3); /* Adjust the color and transparency as needed */
-  backdrop-filter: blur(10px); /* Adjust the blur strength as needed */
+  background-color: rgba(169, 169, 169, 0.3); 
+  backdrop-filter: blur(10px); 
   position: relative;
   display: flex;
   justify-content: center;

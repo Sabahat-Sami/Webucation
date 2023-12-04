@@ -3,7 +3,25 @@ import Loading from '../components/Loading.js'
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import axios from 'axios'
-
+import {
+  DeleteOutline,
+} from "@material-ui/icons";
+import styled from "styled-components";
+const Icon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 10px 10px 10px;
+  transition: all 0.5s ease;
+  &:hover {
+    background-color: #e9f5f5;
+    transform: scale(1.1);
+  }
+`;
 export default function Table() {
   const [searchTerm, setSearchTerm] = useState('')
   const [cookies, removeCookie] = useCookies(['jwt']);
@@ -162,6 +180,26 @@ export default function Table() {
     };
     reader.readAsBinaryString(file);
   }
+
+  const deleteDocument = async (course_id, document_id) => {
+    try{
+      axios.delete('http://localhost:8080/document/delete_document', {
+        headers: {
+          Authorization: `Bearer ${cookies.jwt}`,
+          Document_id: document_id,
+          Course_id: course_id
+        }
+      }).then((res) => {
+        if(res.status === 200){
+          console.log("success")
+          window.location.reload(false);
+        }
+      }).catch(err => console.log(err))
+    }
+    catch (e){
+      console.log(e);
+    }
+  }
   return (
     <>
     {(loading) ? <Loading /> : (<div className='bg-white'>
@@ -242,6 +280,9 @@ export default function Table() {
                     )
                     )}
                   </td>
+                  <td><Icon>
+                    <DeleteOutline onClick={() => {deleteDocument(courseID, note.document_id)}}/>
+                </Icon></td>
                 </tr>))) : ((docs.map(note => (
                 <tr className='hover:bg-slate-100'>
                   <div onClick={() => {navigate('/viewNote', {state: {document_id: note.document_id}})}}>

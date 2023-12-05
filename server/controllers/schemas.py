@@ -23,7 +23,7 @@ class ProfileCourseInput(BaseModel):
 class DocumentInput(BaseModel):
     title: str
     author_id: int
-    size: int
+    # size: int
     content: str
     general_access: int
     course_id: int

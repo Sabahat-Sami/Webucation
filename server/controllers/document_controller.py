@@ -22,15 +22,15 @@ async def create_document(user: user_dependency, body: DocumentInput):
         print("body", body)
         title = body.title
         author_id = body.author_id
-        size = body.size
+        # size = body.size
         content = body.content
         general_access = body.general_access
         course_id = body.course_id
         # Binary file reading not tested yet
         print(content)
-        sql = '''INSERT INTO Document(title, author_id, size, content, general_access) 
-VALUES (%s, %s, %s, %s, %s) RETURNING document_id;'''
-        data = (title, int(author_id), int(size), content, int(general_access))
+        sql = '''INSERT INTO Document(title, author_id, content, general_access) 
+VALUES (%s, %s, %s, %s) RETURNING document_id;'''
+        data = (title, int(author_id), content, int(general_access))
 
         cursor.execute(sql, data)
         document_id = cursor.fetchone()[0]
@@ -180,7 +180,6 @@ async def get_public_documents(user: user_dependency):
     D.author_id,
     (SELECT fname FROM Profile WHERE user_id = D.author_id) AS first_name,
     (SELECT lname FROM Profile WHERE user_id = D.author_id) AS last_name,
-    D.size,
     D.general_access,
     (SELECT code FROM Course WHERE course_id = (SELECT course_id FROM CourseDocument WHERE document_id = D.document_id)) AS course_code,
     (SELECT title FROM Course WHERE course_id = (SELECT course_id FROM CourseDocument WHERE document_id = D.document_id)) AS course_title

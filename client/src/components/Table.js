@@ -49,7 +49,7 @@ export default function Table() {
   const navigate = useNavigate()
   const { noteType, courseID } = useParams();
   const [docs, setDocs] = useState([]);
-  const [categories, setCategories] = useState({});
+  // const [categories, setCategories] = useState({});
   const [course, setCourse] = useState({});
   const [loading, setLoading] = useState(true);
   const [file, setFile] = useState();
@@ -103,7 +103,7 @@ export default function Table() {
   
           if (isMounted && res.status === 200) {
             Object.values(res.data).forEach(value => {
-              fetchCategories(value.document_id);
+              // fetchCategories(value.document_id);
               setDocs(prev => [...prev, value]);
             });
             setLoading(false);
@@ -115,25 +115,25 @@ export default function Table() {
         }
       };
 
-      const fetchCategories = async (id) => {
-        try {
-          const res = await axios.get('http://localhost:8080/document/get_document_category', {
-            headers: {
-              Authorization: `Bearer ${cookies.jwt}`,
-              document_id: `${id}`
-            },
-          });
+      // const fetchCategories = async (id) => {
+      //   try {
+      //     const res = await axios.get('http://localhost:8080/document/get_document_category', {
+      //       headers: {
+      //         Authorization: `Bearer ${cookies.jwt}`,
+      //         document_id: `${id}`
+      //       },
+      //     });
   
-          if (res.status === 200) {
-            setCategories(prev => {
-                return {...prev, [id]: Object.values(res.data).map(item => item.name)}
-              }
-            );
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      };
+      //     if (res.status === 200) {
+      //       setCategories(prev => {
+      //           return {...prev, [id]: Object.values(res.data).map(item => item.name)}
+      //         }
+      //       );
+      //     }
+      //   } catch (err) {
+      //     console.log(err);
+      //   }
+      // };
 
       const fetchCourse = async () => {
         try {
@@ -269,7 +269,7 @@ export default function Table() {
           title: file.name,
           general_access: 1,
           author_id: cookies.user_id,
-          size: file.size,
+          // size: file.size,
           content: reader.result,
           course_id: courseID
       }, {
@@ -362,9 +362,9 @@ export default function Table() {
                 <th className='px-6 py-2 text-s text-gray-500'>Document Title</th>
                 <th className='px-6 py-2 text-s text-gray-500'>Author</th>
                 {(noteType === "my-notes") ? <></> : <th className='px-6 py-2 text-s text-gray-500'>Course</th>}
-                <th className='px-6 py-2 text-s text-gray-500'>Size</th>
+                {/* <th className='px-6 py-2 text-s text-gray-500'>Size</th> */}
                 <th className='px-6 py-2 text-s text-gray-500'>Gen. Access</th>
-                <th className='px-6 py-2 text-s text-gray-500'>Categories</th>
+                {/* <th className='px-6 py-2 text-s text-gray-500'>Categories</th> */}
                 <th className='px-6 py-2 text-s text-gray-500'></th>
               </tr>
             </thead>
@@ -380,15 +380,15 @@ export default function Table() {
                     </div>
                   <td className='px-6 py-4'>{note.first_name + " " + note.last_name}</td>
                   {(noteType === "my-notes") ? <></> : <td className='px-6 py-4'>{note.course_code + ": " + note.course_title}</td>}
-                  <td className='px-6 py-4'>{note.size}</td>
+                  {/* <td className='px-6 py-4'>{note.size}</td> */}
                   {/* general access: 0 = private, 1 = public */}
                   <td className='px-6 py-4'>{(note.general_access === 0) ? "Private" : "Public"}</td>
-                  <td className='px-6 py-4'>
+                  {/* <td className='px-6 py-4'>
                     {categories[note.document_id]?.map(cat => (
                       <div>{cat}</div>
                     )
                     )}
-                  </td>
+                  </td> */}
                   <td className='flex justify-center'>
                     <Icon>
                       <PersonAddIcon onClick={() => {handleOpen(note.document_id)}}/>
@@ -406,15 +406,15 @@ export default function Table() {
                   </div>
                   <td className='px-6 py-4'>{note.first_name + " " + note.last_name}</td>
                   {(noteType === "my-notes") ? <></> : <td className='px-6 py-4'>{note.course_code + ": " + note.course_title}</td>}
-                  <td className='px-6 py-4'>{note.size}</td>
+                  {/* <td className='px-6 py-4'>{note.size}</td> */}
                   {/* general access: 0 = private, 1 = public */}
                   <td className='px-6 py-4'>{(note.general_access === 0) ? "Private" : "Public"}</td>
-                  <td className='px-6 py-4'>
+                  {/* <td className='px-6 py-4'>
                     {categories[note.document_id]?.map(cat => (
                       <div>{cat}</div>
                     )
                     )}
-                  </td>
+                  </td> */}
                 </tr>))))
               }
 

@@ -237,7 +237,6 @@ async def get_user_course_documents(user: user_dependency, course_id: int = Head
     D.document_id, 
     D.title, 
     D.author_id, 
-    D.size, 
     D.general_access,
     (
         SELECT P.fname
@@ -293,7 +292,6 @@ async def get_shared_with_me_documents(user: user_dependency):
         FROM Profile P
         WHERE P.user_id = D.author_id
     ) AS last_name,
-    D.size,
     D.general_access,
     (
         SELECT C.code

@@ -55,7 +55,7 @@ const TextEditor = () =>{
                         "lists",
                         "link",
                         "image",
-                        "export",
+                        // "export",
                         "charmap",
                         "preview",
                         "anchor",

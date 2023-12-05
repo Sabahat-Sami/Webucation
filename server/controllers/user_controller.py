@@ -39,7 +39,7 @@ async def create_profile(body: SignupInput):
         print(email, username, password)
         
 
-        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about, picture) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,  %s);'''
+        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about, profile_picture) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,  %s);'''
         data = (email, username, password, fname, lname, phone_number, about, picture)
         a = cursor.execute(sql, data)
         conn.commit()
@@ -185,10 +185,6 @@ async def get_profile(user: user_dependency):
             out = dict(zip(column_names, result))
             del out["password"] # leave out password
 
-            # Set default picture
-            if(out["picture"] == None):
-                out["picture"] = "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
-
             sql = '''SELECT * FROM profilefriends WHERE user_id = %s;'''
             cursor.execute(sql,(out['user_id'],)) 
             result = cursor.fetchall()
@@ -217,7 +213,7 @@ async def get_profile_friends(user: user_dependency, user_id:int):
         user_id = user_id
         print(user)
         # Gets friends id and name
-        sql = '''select user_id as id, picture as pfp, CONCAT(fname || ' ' || lname) as name from profile where user_id in 
+        sql = '''select user_id as id, profile_picture as pfp, CONCAT(fname || ' ' || lname) as name from profile where user_id in 
         (select friend_id from profilefriends where user_id = %s
         union
         select user_id from profilefriends where friend_id = %s)'''
@@ -246,9 +242,6 @@ async def get_profile_friends(user: user_dependency, user_id:int):
             else:
                 i["shared_courses"] = []
 
-            # Set default pfp
-            if(i["pfp"] == None):
-                i["pfp"] = "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
 
 
         print(out)

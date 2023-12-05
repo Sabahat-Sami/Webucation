@@ -29,8 +29,12 @@ export default function EditProfile() {
                 setName(res.data.fname + " " + res.data.lname)
                 setNum(res.data.phone_number)
                 setAbout(res.data.about)
-                setPfp(res.data.picture)
-
+                if(res.data.picture == null){
+                  setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+                }
+                else{
+                  setPfp(res.data.picture)
+                }
               }
           }).catch(err => console.log(err))
         }

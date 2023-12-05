@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from fastapi import UploadFile
 
 class LoginInput(BaseModel):
     email: str 
@@ -14,7 +13,18 @@ class SignupInput(BaseModel):
     lname: str
     phone_num: str
 
+class ProfileUpdateInput(BaseModel):
+    user_id: str
+    new_email: str
+    phone_num: str
+    about_me: str
+
 class FriendInput(BaseModel):
+    user_id: int
+    friend_email: str
+
+class DeleteFriendInput(BaseModel):
+    user_id: int
     friend_id: int
 
 class ProfileCourseInput(BaseModel):

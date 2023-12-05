@@ -34,12 +34,13 @@ async def create_profile(body: SignupInput):
         lname = body.lname
         phone_number = body.phone_num
         about = ''
+        picture = None
 
         print(email, username, password)
         
 
-        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about) VALUES (%s, %s, %s, %s, %s, %s, %s);'''
-        data = (email, username, password, fname, lname, phone_number, about)
+        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about, picture) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,  %s);'''
+        data = (email, username, password, fname, lname, phone_number, about, picture)
         a = cursor.execute(sql, data)
         conn.commit()
         print("Success")
@@ -56,13 +57,33 @@ async def create_profile(body: SignupInput):
             )
 
 @router.post("/user/create_profile_friends/", response_model=None)
-async def create_profile_friends(body: FriendInput):
+async def create_profile_friends(user: user_dependency, body: FriendInput):
     try:
-        user_id = body.user_id
-        friend_id = body.friend_id
+        # Retrieve friend ID
+        sql = '''SELECT user_id FROM Profile WHERE email = %s;'''
+        cursor.execute(sql,(str(body.friend_email),)) 
+        result = cursor.fetchone()
+        # If no friend user exists
+        if (not result):
+            print("No user exists")
+            raise HTTPException(status_code=404, detail="Item not found")
 
-        sql = "INSERT INTO ProfileFriends(user_id, friend_id) VALUES (%d, %d);"
-        data = (int(user_id), int(friend_id))
+        friend_id = int(result[0])
+        user_id = body.user_id
+
+        # Check if friend pair already exists
+        sql = '''select * from profilefriends where (user_id = %s and friend_id = %s) or (user_id = %s and friend_id = %s)'''
+        data = (user_id, friend_id, friend_id, user_id)
+        a = cursor.execute(sql, data)
+        result = cursor.fetchone()
+        if (result):
+            print("Friend pairing already exists")
+            raise HTTPException(status_code=404, detail="Friend pairing already exists")
+
+
+        # Add user and friend to list
+        sql = "INSERT INTO ProfileFriends(user_id, friend_id) VALUES (%s, %s);"
+        data = (user_id, friend_id)
         cursor.execute(sql, data)
         conn.commit()
         return {"user_id": user_id}
@@ -76,6 +97,8 @@ async def create_profile_friends(body: FriendInput):
                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
                          "message": "Internal Server Error"}
             )
+
+
 
 @router.post("/user/create_profile_course/", response_model=None)
 async def create_profile_course(user: user_dependency, body: ProfileCourseInput):
@@ -143,57 +166,102 @@ async def log_in(email: str, password: str):
             )
 
 # Get profile
-# @router.get("/user/get_profile/")
-# async def get_profile(user: user_dependency):
-#     try:
-#         email = user.get('username')
-#         # Gets users from database
-#         sql = '''SELECT * FROM Profile WHERE email = %s;'''
-#         cursor.execute(sql,(email,)) 
-#         result = cursor.fetchone()
-#         # If no user exists
-#         if (not result):
-#             print("No user exists")
-#             raise HTTPException(status_code=404, detail="Item not found")
+@router.get("/user/get_profile/")
+async def get_profile(user: user_dependency):
+    try:
+        email = user.get('username')
+        # Gets users from database
+        sql = '''SELECT * FROM Profile WHERE email = %s;'''
+        cursor.execute(sql,(email,)) 
+        result = cursor.fetchone()
+        # If no user exists
+        if (not result):
+            print("No user exists")
+            raise HTTPException(status_code=404, detail="Item not found")
+        # If user exists
+        else:
+            # Success
+            column_names = [desc[0] for desc in cursor.description]
+            out = dict(zip(column_names, result))
+            del out["password"] # leave out password
 
-#         # If user exists
-#         else:
-#             # Success
-#             column_names = [desc[0] for desc in cursor.description]
-#             out = dict(zip(column_names, result))
-#             del out["password"] # leave out password
-#             print(out)
+            # Set default picture
+            if(out["picture"] == None):
+                out["picture"] = "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
 
-#             return out
+            sql = '''SELECT * FROM profilefriends WHERE user_id = %s;'''
+            cursor.execute(sql,(out['user_id'],)) 
+            result = cursor.fetchall()
 
-#     except Error as e:
-#         print("Unable to serach for db entry", e)
-#         return JSONResponse(
-#                 status_code=500,
-#                 content={
-#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-#                          "message": "Internal Server Error"}
-#             )
+            out["numFriends"] = len(result)
 
-# @router.get("/user/get_profile_friends/")
-# async def get_profile_friends(user_id: int):
-#     try:
-#         sql = '''SELECT * FROM ProfileFriends WHERE user_id = %d;'''
-#         data = (user_id,)
-#         cursor.execute(sql, data)
-#         result = cursor.fetchall()
-#         column_names = [desc[0] for desc in cursor.description]
-#         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
-#         return out
-    
-#     except Error as e:
-#         print("Unable to serach for db entry", e)
-#         return JSONResponse(
-#                 status_code=500,
-#                 content={
-#                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-#                          "message": "Internal Server Error"}
-#             )
+
+            print(out)
+
+
+
+            
+            return out
+    except Error as e:
+        print("Unable to serach for db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
+
+@router.get("/user/get_profile_friends/")
+async def get_profile_friends(user: user_dependency, user_id:int):
+    try:
+        user_id = user_id
+        print(user)
+        # Gets friends id and name
+        sql = '''select user_id as id, picture as pfp, CONCAT(fname || ' ' || lname) as name from profile where user_id in 
+        (select friend_id from profilefriends where user_id = %s
+        union
+        select user_id from profilefriends where friend_id = %s)'''
+        data = (user_id, user_id)
+        cursor.execute(sql, data)
+        result = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+        out = [dict(zip(column_names, row)) for row in result]
+
+        # Gets mutual courses
+        for i in out:
+            print(i['id'])
+            sql = ''' select title 
+            from course 
+            natural join(
+                select course_id, count(user_id) from profilecourse
+                where user_id = %s or user_id = %s
+                group by course_id
+                having count (user_id) > 1)'''
+
+            data = (user_id, i["id"])
+            cursor.execute(sql, data)
+            result = [r[0] for r in cursor.fetchall()]
+            if(len(result) > 0):
+                i["shared_courses"] = result
+            else:
+                i["shared_courses"] = []
+
+            # Set default pfp
+            if(i["pfp"] == None):
+                i["pfp"] = "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
+
+
+        print(out)
+        return out
+  
+    except Error as e:
+        print("Unable to serach for db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
 
 @router.get("/user/get_user_courses/")
 async def get_user_courses(user: user_dependency):
@@ -381,6 +449,54 @@ WHERE course_id = %s AND user_id = (
     
     except Error as e:
         print("Unable to update db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
+
+@router.delete("/user/delete_friend/")
+async def delete_friend(user: user_dependency, body: DeleteFriendInput):
+    try:
+        user_id = body.user_id
+        friend_id = body.friend_id
+        sql = '''DELETE FROM profilefriends
+        WHERE (user_id = %s and friend_id = %s) or (user_id = %s and friend_id = %s);'''
+        data = (user_id, friend_id, friend_id, user_id)
+        cursor.execute(sql, data)
+        conn.commit()
+
+        return {"status":"Deleted"}
+    
+    except Error as e:
+        print("Unable to update db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
+
+@router.put("/user/update_profile/")
+async def update_document(user: user_dependency, body: ProfileUpdateInput):
+    try:
+        user_id = body.user_id
+        new_email = body.new_email
+        phone_num = body.phone_num
+        about_me = body.about_me
+
+        sql = '''UPDATE profile SET email = %s, username = %s, phone_number = %s, about = %s WHERE user_id = %s'''
+        data = (new_email, new_email, phone_num, about_me, user_id)
+        cursor.execute(sql, data)
+        conn.commit()
+
+        token = await create_access_token(new_email)
+        return {"token": token, "user_id": user_id}
+
+    except Error as e:
+        print("Unable to update db entry", e)
+        conn.rollback()
         return JSONResponse(
                 status_code=500,
                 content={

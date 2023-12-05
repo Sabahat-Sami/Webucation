@@ -45,7 +45,7 @@ const TextEditor = () =>{
                     title: `${title}`,
                     general_access: access_int,
                     author_id: cookies.user_id,
-                    size: 0,
+                    // size: 0,
                     content: editorRef.current.getContent(),
                     course_id: data.courseID
                 }, {
@@ -117,7 +117,7 @@ const TextEditor = () =>{
                         "lists",
                         "link",
                         "image",
-                        "export",
+                        // "export",
                         "charmap",
                         "preview",
                         "anchor",

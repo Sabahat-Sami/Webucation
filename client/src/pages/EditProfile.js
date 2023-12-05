@@ -1,61 +1,108 @@
 import React from 'react'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useCookies } from "react-cookie";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
 
 export default function EditProfile() {
-      // @ Ivan : the user below should be set to whatever user is logged in at the moment
-    let user = {
-        email: "sabahatsami@nyu.edu",
-        password: "password",
-        fname: "Sabahat",
-        lname: "Sami",
-        phone_num: "123-456-7890",
-        grad: "Spring 2024",
-        numFriends: 14,
-        about: "I am a computer science major interested in Psychology stuff. I'm from Queens, New York but my family felt like leaving to Ohio for some reason. I made this stupid web application for a design project course at NYU, but it's turning out to be a pretty awful experience. I can't wait for this semester to be over.",
-        pfp: "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
-    }
+    const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
     
+
     const inputRef = useRef(null);
-    const [image, setImage] = useState(user.pfp);
-    const [email, setEmail] = useState(user.email);
-    const [phone_num, setNum] = useState(user.phone_num);
-    const [about, setAbout] = useState(user.about);
+    const navigate = useNavigate()
+    const [pfp, setPfp] = useState("");
+    const [newPfp, setNewPfp] = useState(null)
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [phone_num, setNum] = useState("");
+    const [about, setAbout] = useState("");
+
+    useEffect(() => {
+        try {
+          axios.get('http://localhost:8080/user/get_profile/', {
+              headers: {
+                  Authorization: `Bearer ${cookies.jwt}`
+              }
+          }).then(res => {
+              if (res.status === 200 ) {
+                setEmail(res.data.email)
+                setName(res.data.fname + " " + res.data.lname)
+                setNum(res.data.phone_number)
+                setAbout(res.data.about)
+                setPfp(res.data.picture)
+
+              }
+          }).catch(err => console.log(err))
+        }
+        catch (e) {
+            console.log(e);
+        }
+      }, [])
 
     const handleImageClick = () => {
       inputRef.current.click();
     }
     
     function handleImageChange(e) {
-      const img = URL.createObjectURL(e.target.files[0])// @ Ivan : modify the user's pfp to this img variable
-      setImage(img);
+      setNewPfp(e.target.files[0])
+      const img = URL.createObjectURL(e.target.files[0])
+      setPfp(img);
     }
+
+    const saveProfile = async e => {
+      e.preventDefault()
+      try {
+        axios.put('http://localhost:8080/user/update_profile/', {
+            user_id: `${cookies.user_id}`,
+            new_email: `${email}`,
+            phone_num: `${phone_num}`,
+            about_me: `${about}`,
+
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.jwt}`
+            }
+        }).then(res => {
+            if (res.status === 200 ) {
+                setCookie('jwt', res.data.token, {path: "/"});
+                setCookie('user_id', res.data.user_id, {path: "/"})
+                setTimeout(() => {
+                  navigate('/profile');
+                }, 0);
+            }
+        }).catch(err => console.log(err))
+    }
+    catch (e) {
+        console.log(e);
+    }
+  }
     
 
   return (
     <div>
         <br/>
             <div onClick={handleImageClick} className=''>
-                <img  src={image}
+                <img  src={pfp}
                       className='float-right mt-[8%] rounded-full w-[25%] mr-[20%] outline outline-offset-2 outline-4 outline-gray-400 hover:cursor-pointer hover:opacity-75 hover:scale-110'/>
                 <input
                   className='float-right mt-8 px-3 py-3 rounded-full w-[25%] ml-[40%] mr-[20%] outline outline-offset-2 outline-4 outline-gray-400'
                   type='file'
                   ref={inputRef}
                   style={{display: "none"}}
+                  accept=".jpeg, .png, .jpg"
                   onChange={handleImageChange}>
                 </input>
             </div>
 
-            <p className='ml-[15%] mt-[8%] underline text-5xl'>{user.fname + " " + user.lname}</p>
-            <p className='ml-[15%] mt-2 text-2xl '>Expected Graduation: <textarea className='ml-6 mt-2 text-2xl h-11 rounded-xl resize-x px-2 py-2'>{user.grad}</textarea></p> 
-            <p className='ml-[15%] mt-4 text-2xl'>{user.numFriends} connections</p>
+            <p className='ml-[15%] mt-[8%] underline text-5xl'>{name}</p>
+            <br></br>
             <p className='ml-[15%] mt-3 text-3xl underline'>Contact Info</p>
-            <p className='ml-[15%] mt-2 text-2xl '>Email: <textarea className='ml-6 mt-2 text-2xl h-11 rounded-xl resize-x w-[30%] px-2 py-2'>{user.email}</textarea></p> 
-            <p className='ml-[15%] mt-2 text-2xl '>Phone: <textarea className='ml-4 mt-2 text-2xl h-11 rounded-xl resize-x w-[30%] px-2 py-2'>{user.phone_num}</textarea></p> 
+            <p className='ml-[15%] mt-2 text-2xl '>Email: <textarea className='ml-6 mt-2 text-2xl h-11 rounded-xl resize-x w-[30%] px-2 py-2' value = {email} onChange= {e => {setEmail(e.target.value)}}></textarea></p> 
+            <p className='ml-[15%] mt-2 text-2xl '>Phone: <textarea className='ml-4 mt-2 text-2xl h-11 rounded-xl resize-x w-[30%] px-2 py-2' value = {phone_num} onChange= {e => {setNum(e.target.value)}}></textarea></p> 
             <p className='ml-[15%] mt-8 text-3xl underline'>About Me</p>
-            <textarea className='ml-[15%] mr-[15%] mt-4 text-2xl w-[65%] h-[20%] px-4 py-4 rounded-2xl resize-y'>{user.about}</textarea>
+            <textarea className='ml-[15%] mr-[15%] mt-4 text-2xl w-[65%] h-[20%] px-4 py-4 rounded-2xl resize-y' value = {about} onChange= {e => {setAbout(e.target.value)}}></textarea>
             <a href='/profile'>
-                <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10'>
+                <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10' onClick={saveProfile} >
                     Save Changes
                 </button>
             </a> 

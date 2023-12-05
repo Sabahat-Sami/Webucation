@@ -1,10 +1,37 @@
 import React from 'react'
 import Docs from './Docs'
+import { useCookies } from "react-cookie";
+import { useState, useRef, useEffect } from 'react'
+import axios from 'axios';
 
 const Home = () => {
-                      // should prob check for valid token here
-  const valid = true; // ^set `valid` when you check for valid token; logged in = true
-  const user = "Tanvi"; // set this to the user's first name
+
+  const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+  const [valid, setValid] = useState(false); // ^set `valid` when you check for valid token; logged in = true
+  const [user, setUser] = useState(""); // set this to the user's first name
+
+
+  useEffect(() => {
+    if(cookies.jwt != undefined){
+      try {
+        axios.get('http://localhost:8080/user/get_profile/', {
+            headers: {
+                Authorization: `Bearer ${cookies.jwt}`
+            }
+        }).then(res => {
+            if (res.status === 200 ) {
+              console.log("LOGGED IN")
+              setValid(true)
+              setUser(res.data.fname)
+            }
+        }).catch(err => console.log(err))
+      }
+      catch (e) {
+          console.log("THIS RAN")
+          console.log(e);
+      }
+    }
+  }, [])
 
   return (
     <div>

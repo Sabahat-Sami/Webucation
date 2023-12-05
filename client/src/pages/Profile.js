@@ -13,7 +13,7 @@ export default function Profile() {
   const [phone_num, setNum] = useState("");
   const [numFriends, setNumFriends] = useState("");
   const [about, setAbout] = useState("");
-  const [pfp, setPfp] = useState("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg");
+  const [pfp, setPfp] = useState("");
 
   useEffect(() => {
     try {
@@ -28,7 +28,12 @@ export default function Profile() {
             setNum(res.data.phone_number)
             setAbout(res.data.about)
             setNumFriends(res.data.numFriends)
-            setPfp(res.data.picture)
+            if(res.data.picture == null){
+              setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+            }
+            else{
+              setPfp(res.data.picture)
+            }
 
           }
       }).catch(err => console.log(err))

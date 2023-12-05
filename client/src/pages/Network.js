@@ -23,7 +23,14 @@ const Network = () => {
           }
       }).then(res => {
           if (res.status === 200 ) {
-            
+            console.log(res.data)
+
+            res.data.forEach(function(friend){
+              if(friend["pfp"] == null){
+                friend["pfp"] = "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg"
+              }
+            });
+    
             setFriendList(res.data)
 
           }

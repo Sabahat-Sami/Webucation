@@ -17,6 +17,9 @@ export default function EditProfile() {
     
     const inputRef = useRef(null);
     const [image, setImage] = useState(user.pfp);
+    const [email, setEmail] = useState(user.email);
+    const [phone_num, setNum] = useState(user.phone_num);
+    const [about, setAbout] = useState(user.about);
 
     const handleImageClick = () => {
       inputRef.current.click();
@@ -26,6 +29,7 @@ export default function EditProfile() {
       const img = URL.createObjectURL(e.target.files[0])// @ Ivan : modify the user's pfp to this img variable
       setImage(img);
     }
+    
 
   return (
     <div>
@@ -51,7 +55,7 @@ export default function EditProfile() {
             <p className='ml-[15%] mt-8 text-3xl underline'>About Me</p>
             <textarea className='ml-[15%] mr-[15%] mt-4 text-2xl w-[65%] h-[20%] px-4 py-4 rounded-2xl resize-y'>{user.about}</textarea>
             <a href='/profile'>
-                <button className='ml-[45%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10 hover:ml-[44.5%]'>
+                <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10'>
                     Save Changes
                 </button>
             </a> 

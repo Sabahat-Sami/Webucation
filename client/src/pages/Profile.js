@@ -27,7 +27,7 @@ export default function Profile() {
             <p className='ml-[15%] mt-8 text-3xl underline'>About Me</p>
             <p className='ml-[15%] mr-[15%] mt-4 text-2xl'>{user.about}</p>
             <a href='/editProfile'>
-                <button className='ml-[45%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10 hover:ml-[44.5%]'>
+                <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10'>
                     Edit Profile
                 </button>
             </a> 

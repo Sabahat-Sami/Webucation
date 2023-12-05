@@ -92,25 +92,25 @@ const TextEditor = () =>{
         }
     }
 
-
-
     return (
         <div className="font-bold ">
             <br/><br/><br/>
-            <div className="mt-8 rounded-full ml-[8%]">
-                <input required name="title" value={title} onChange= {e => {setTitle(e.target.value)}}/>
-                <select required defaultValue={access} onChange={e => {setAccess(e.target.value)}}>
+            <div className="mt-[3%] rounded-full ml-[13%] mr-[10%]">
+                <input className="text-xl rounded-2xl px-4 py-2 mb-4 w-[50%]" required name="title" value={title} onChange= {e => {setTitle(e.target.value)}}/>
+                <p className="text-xl ml-8 float-right mr-[6%]">Privacy: <select className="rounded-2xl text-base px-4 py-2 " required defaultValue={access} onChange={e => {setAccess(e.target.value)}}>
                     <option>public</option>
                     <option>private</option>
-                </select>
+                </select></p>
                 <Editor
                 onInit={(evt, editor) => (editorRef.current = editor)}
                 value={content}
                 onEditorChange={() => (setContent(editorRef.current.getContent()))}
                 init={{
-                    height: 550,
-                    width:1200,
+                    height: 525,
+                    width: "95%",
+                    resize: true,
                     menubar: true,
+                    margin: "auto",
                     plugins: [
                         "advlist",
                         "autolink",

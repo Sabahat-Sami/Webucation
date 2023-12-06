@@ -31,9 +31,11 @@ export default function EditProfile() {
                 setAbout(res.data.about)
                 if(res.data.profile_picture == null){
                   setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+                  setNewPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
                 }
                 else{
                   setPfp(res.data.profile_picture)
+                  setNewPfp(res.data.profile_picture)
                 }
               }
           }).catch(err => console.log(err))
@@ -61,6 +63,13 @@ export default function EditProfile() {
 
     const saveProfile = async e => {
       e.preventDefault()
+      
+      console.log("ewrR"+ newPfp)
+      if(newPfp === null){
+        setNewPfp(pfp)
+      }
+      console.log("asdrR"+ pfp)
+      console.log("asdrR"+ newPfp)
 
       try {
         axios.put('http://localhost:8080/user/update_profile/', {

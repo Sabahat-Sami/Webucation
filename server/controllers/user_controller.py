@@ -39,8 +39,16 @@ async def create_profile(body: SignupInput):
 
         print(email, username, password)
         
+        # Check if user exists already
+        sql = '''SELECT * FROM profile WHERE email = %s;'''
+        cursor.execute(sql,(str(email),)) 
+        result = cursor.fetchone()
+        if(result):
+            print("User already exists")
+            raise HTTPException(status_code=404, detail="User already exists")
 
-        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about, profile_picture) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,  %s);'''
+        # Inserts user
+        sql = '''INSERT INTO Profile(email, username, password, fname, lname, phone_number, about, profile_picture) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);'''
         data = (email, username, password, fname, lname, phone_number, about, picture)
         a = cursor.execute(sql, data)
         conn.commit()

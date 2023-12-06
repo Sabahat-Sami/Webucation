@@ -2,10 +2,11 @@ from connection import cursor, conn
 from psycopg2 import Error
 import bcrypt
 
-from fastapi import APIRouter, Response, Request, HTTPException, status, Depends, Header
+from fastapi import APIRouter, Response, Request, HTTPException, status, Depends, Header, File, Form, UploadFile
 from fastapi.responses import JSONResponse
 from controllers.schemas import *
 from typing import Annotated
+import base64
 
 from controllers.auth import has_access, create_access_token
 
@@ -184,7 +185,12 @@ async def get_profile(user: user_dependency):
             column_names = [desc[0] for desc in cursor.description]
             out = dict(zip(column_names, result))
             del out["password"] # leave out password
+            #del out["profile_picture"]
 
+            #out["profile_picture"] = bytes(out["profile_picture"])
+            print(type(out["profile_picture"]))
+            if(out["profile_picture"] != None):
+                out["profile_picture"] = out["profile_picture"].tobytes()
             sql = '''SELECT * FROM profilefriends WHERE user_id = %s;'''
             cursor.execute(sql,(out['user_id'],)) 
             result = cursor.fetchall()
@@ -192,11 +198,6 @@ async def get_profile(user: user_dependency):
             out["numFriends"] = len(result)
 
 
-            print(out)
-
-
-
-            
             return out
     except Error as e:
         print("Unable to serach for db entry", e)
@@ -211,7 +212,6 @@ async def get_profile(user: user_dependency):
 async def get_profile_friends(user: user_dependency, user_id:int):
     try:
         user_id = user_id
-        print(user)
         # Gets friends id and name
         sql = '''select user_id as id, profile_picture as pfp, CONCAT(fname || ' ' || lname) as name from profile where user_id in 
         (select friend_id from profilefriends where user_id = %s
@@ -222,6 +222,12 @@ async def get_profile_friends(user: user_dependency, user_id:int):
         result = cursor.fetchall()
         column_names = [desc[0] for desc in cursor.description]
         out = [dict(zip(column_names, row)) for row in result]
+
+
+        # Changes all friend profiles to bytes
+        for i in out:
+            if(i["pfp"] != None):
+                i["pfp"] = i["pfp"].tobytes()
 
         # Gets mutual courses
         for i in out:
@@ -244,7 +250,7 @@ async def get_profile_friends(user: user_dependency, user_id:int):
 
 
 
-        print(out)
+
         return out
   
     except Error as e:
@@ -272,7 +278,6 @@ WHERE Course.course_id IN (
     )
 );'''
         data = (email,)
-        print(data)
         cursor.execute(sql, data)
         result = cursor.fetchall()
         column_names = [desc[0] for desc in cursor.description]
@@ -409,7 +414,6 @@ AND
         data = (email, email)
         cursor.execute(sql, data)
         result = cursor.fetchall()
-        print(result)
         column_names = [desc[0] for desc in cursor.description]
         out = {i : elm for i, elm in enumerate([dict(zip(column_names, row)) for row in result])}
         return out
@@ -471,6 +475,33 @@ async def delete_friend(user: user_dependency, body: DeleteFriendInput):
                          "message": "Internal Server Error"}
             )
 
+#
+#@router.put("/user/update_profile/")
+#async def update_document(user: user_dependency, body: ProfileUpdateInput):
+#    try:
+#        user_id = body.user_id
+#        new_email = body.new_email
+#        phone_num = body.phone_num
+#        about_me = body.about_me
+#
+#        sql = '''UPDATE profile SET email = %s, username = %s, phone_number = %s, about = %s WHERE user_id = %s'''
+#        data = (new_email, new_email, phone_num, about_me, user_id)
+#        cursor.execute(sql, data)
+#        conn.commit()
+#
+#        token = await create_access_token(new_email)
+#        return {"token": token, "user_id": user_id}
+#
+#    except Error as e:
+#        print("Unable to update db entry", e)
+#        conn.rollback()
+#        return JSONResponse(
+#                status_code=500,
+#                content={
+#                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+#                         "message": "Internal Server Error"}
+#            )
+
 @router.put("/user/update_profile/")
 async def update_document(user: user_dependency, body: ProfileUpdateInput):
     try:
@@ -478,15 +509,20 @@ async def update_document(user: user_dependency, body: ProfileUpdateInput):
         new_email = body.new_email
         phone_num = body.phone_num
         about_me = body.about_me
+        profile_picture = body.profile_picture
+        profile_picture_bytes = str.encode(profile_picture)
 
-        sql = '''UPDATE profile SET email = %s, username = %s, phone_number = %s, about = %s WHERE user_id = %s'''
-        data = (new_email, new_email, phone_num, about_me, user_id)
+        #print(profile_picture)
+
+
+        sql = '''UPDATE profile SET email = %s, username = %s, phone_number = %s, about = %s, profile_picture = %s WHERE user_id = %s'''
+        data = (new_email, new_email, phone_num, about_me, profile_picture_bytes, user_id)
         cursor.execute(sql, data)
         conn.commit()
-
+#
         token = await create_access_token(new_email)
         return {"token": token, "user_id": user_id}
-
+#
     except Error as e:
         print("Unable to update db entry", e)
         conn.rollback()
@@ -496,6 +532,7 @@ async def update_document(user: user_dependency, body: ProfileUpdateInput):
                          "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
                          "message": "Internal Server Error"}
             )
+
 
 def encrypt_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf8')

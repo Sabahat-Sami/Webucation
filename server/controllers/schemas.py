@@ -18,6 +18,7 @@ class ProfileUpdateInput(BaseModel):
     new_email: str
     phone_num: str
     about_me: str
+    profile_picture: str
 
 class FriendInput(BaseModel):
     user_id: int

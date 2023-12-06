@@ -20,6 +20,9 @@ class ProfileUpdateInput(BaseModel):
     about_me: str
     profile_picture: str
 
+class DeletePfpInput(BaseModel):
+    user_id: int
+
 class FriendInput(BaseModel):
     user_id: int
     friend_email: str

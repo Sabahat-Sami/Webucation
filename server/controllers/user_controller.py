@@ -81,8 +81,8 @@ async def create_profile_friends(user: user_dependency, body: FriendInput):
         user_id = body.user_id
 
         # Check if friend pair already exists
-        sql = '''select * from profilefriends where (user_id = %s and friend_id = %s) or (user_id = %s and friend_id = %s)'''
-        data = (user_id, friend_id, friend_id, user_id)
+        sql = '''select * from profilefriends where (user_id = %s and friend_id = %s)'''
+        data = (user_id, friend_id)
         a = cursor.execute(sql, data)
         result = cursor.fetchone()
         if (result):
@@ -222,10 +222,8 @@ async def get_profile_friends(user: user_dependency, user_id:int):
         user_id = user_id
         # Gets friends id and name
         sql = '''select user_id as id, profile_picture as pfp, CONCAT(fname || ' ' || lname) as name from profile where user_id in 
-        (select friend_id from profilefriends where user_id = %s
-        union
-        select user_id from profilefriends where friend_id = %s)'''
-        data = (user_id, user_id)
+        (select friend_id from profilefriends where user_id = %s)'''
+        data = (user_id,)
         cursor.execute(sql, data)
         result = cursor.fetchall()
         column_names = [desc[0] for desc in cursor.description]
@@ -467,8 +465,8 @@ async def delete_friend(user: user_dependency, body: DeleteFriendInput):
         user_id = body.user_id
         friend_id = body.friend_id
         sql = '''DELETE FROM profilefriends
-        WHERE (user_id = %s and friend_id = %s) or (user_id = %s and friend_id = %s);'''
-        data = (user_id, friend_id, friend_id, user_id)
+        WHERE (user_id = %s and friend_id = %s);'''
+        data = (user_id, friend_id)
         cursor.execute(sql, data)
         conn.commit()
 

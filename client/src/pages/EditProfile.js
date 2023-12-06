@@ -29,11 +29,11 @@ export default function EditProfile() {
                 setName(res.data.fname + " " + res.data.lname)
                 setNum(res.data.phone_number)
                 setAbout(res.data.about)
-                if(res.data.picture == null){
+                if(res.data.profile_picture == null){
                   setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
                 }
                 else{
-                  setPfp(res.data.picture)
+                  setPfp(res.data.profile_picture)
                 }
               }
           }).catch(err => console.log(err))
@@ -48,19 +48,27 @@ export default function EditProfile() {
     }
     
     function handleImageChange(e) {
-      setNewPfp(e.target.files[0])
+      const reader = new FileReader();
+      reader.onload = () => {
+        setNewPfp(reader.result)
+      }
+
       const img = URL.createObjectURL(e.target.files[0])
       setPfp(img);
+
+      reader.readAsDataURL(e.target.files[0]);
     }
 
     const saveProfile = async e => {
       e.preventDefault()
+
       try {
         axios.put('http://localhost:8080/user/update_profile/', {
-            user_id: `${cookies.user_id}`,
-            new_email: `${email}`,
-            phone_num: `${phone_num}`,
-            about_me: `${about}`,
+          user_id: `${cookies.user_id}`,
+          new_email: `${email}`,
+          phone_num: `${phone_num}`,
+          about_me: `${about}`,
+          profile_picture: `${newPfp}`,
 
         }, {
             headers: {

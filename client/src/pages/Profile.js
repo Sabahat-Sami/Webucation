@@ -28,11 +28,11 @@ export default function Profile() {
             setNum(res.data.phone_number)
             setAbout(res.data.about)
             setNumFriends(res.data.numFriends)
-            if(res.data.picture == null){
+            if(res.data.profile_picture == null){
               setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
             }
             else{
-              setPfp(res.data.picture)
+              setPfp(res.data.profile_picture)
             }
 
           }
@@ -43,7 +43,7 @@ export default function Profile() {
     }
   }, [])
 
-
+console.log(pfp)
   return (
     <div>
         <br/>

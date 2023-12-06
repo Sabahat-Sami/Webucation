@@ -6,7 +6,7 @@ CREATE TABLE Profile (
     fname VARCHAR(50) NOT NULL,
     lname VARCHAR(50) NOT NULL,
     phone_number VARCHAR(20),
-    about TEXT
+    about TEXT,
     profile_picture BYTEA
 );
 

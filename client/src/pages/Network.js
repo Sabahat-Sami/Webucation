@@ -1,5 +1,4 @@
 import React from 'react'
-import { friends, may_know } from './data'
 import { useState, useRef, useEffect } from 'react'
 import { useCookies } from "react-cookie";
 import axios from 'axios';
@@ -116,7 +115,9 @@ console.log(friendList)
           value = {friendEmail} onChange= {e => {setFriendEmail(e.target.value)}}>
         </input>
 
-        <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#424B5A] text-xl text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' onClick={addFriend}>Follow</button>
+        <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#424B5A] text-xl text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' 
+        onClick={addFriend}
+        >Follow</button>
       </p> 
 
       {/* I HAVE NO IDEA WHAT IM DOING */}
@@ -137,7 +138,9 @@ console.log(friendList)
                   {course}
                 </li>
               ))}   </p>
-              <button className='place-content-center px-8 text-sm py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' onClick={(e) => removeFriend(e, val.id)}> Stop following</button>
+              <button className='place-content-center px-8 text-sm py-3 bg-red-300 text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' 
+              onClick={(e) => removeFriend(e, val.id)}
+              >Unfollow</button>
             </div>
           )
         })}

@@ -109,14 +109,14 @@ console.log(friendList)
       {/* I HAVE NO IDEA WHAT IM DOING */}
 
       <br></br><br></br><br></br><br></br>
-      <p className='ml-[5%] mt-2 text-2xl '>Add a friend: 
+      <p className='ml-[5%] mt-2 text-2xl '>Follow someone: 
 
         <input className='ml-6 mt-2 text-2xl h-11 rounded-xl resize-x w-[30%] px-2 py-2' 
-          placeholder="Enter your friend's e-mail address" 
+          placeholder="Enter their e-mail address" 
           value = {friendEmail} onChange= {e => {setFriendEmail(e.target.value)}}>
         </input>
 
-        <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#424B5A] text-xl text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' onClick={addFriend}>Add friend</button>
+        <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#424B5A] text-xl text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' onClick={addFriend}>Follow</button>
       </p> 
 
       {/* I HAVE NO IDEA WHAT IM DOING */}
@@ -124,7 +124,7 @@ console.log(friendList)
 
 
 
-      <h1 className='w-42 text-4xl mt-16 mb-4 ml-8 font-black tracking-tight text-gray-900 dark:text-white'>Your Friends</h1>
+      <h1 className='w-42 text-4xl mt-16 mb-4 ml-8 font-black tracking-tight text-gray-900 dark:text-white'>Following:</h1>
       <div className='ml-4 mr-4 mb-32 grid gap-4 grid-cols-6 space-y-5 text-2xl'>
         {friendList?.map((val) => {
           return (
@@ -137,7 +137,7 @@ console.log(friendList)
                   {course}
                 </li>
               ))}   </p>
-              <button className='place-content-center px-8 text-sm py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' onClick={(e) => removeFriend(e, val.id)}> Remove friend</button>
+              <button className='place-content-center px-8 text-sm py-3 bg-[#424B5A] text-white rounded-full hover:bg-slate-400 hover:cursor-pointer' onClick={(e) => removeFriend(e, val.id)}> Stop following</button>
             </div>
           )
         })}

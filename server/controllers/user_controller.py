@@ -481,6 +481,28 @@ async def delete_friend(user: user_dependency, body: DeleteFriendInput):
                          "message": "Internal Server Error"}
             )
 
+@router.put("/user/delete_profile_picture/")
+async def delete_profile_picture(user: user_dependency, body: DeletePfpInput):
+    try:
+        user_id = body.user_id
+        sql = '''UPDATE profile
+        SET profile_picture = NULL
+        WHERE user_id = %s;'''
+        data = (user_id, )
+        cursor.execute(sql, data)
+        conn.commit()
+
+        return {"status":"Deleted profile picture"}
+    
+    except Error as e:
+        print("Unable to update db entry", e)
+        return JSONResponse(
+                status_code=500,
+                content={
+                         "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                         "message": "Internal Server Error"}
+            )
+
 #
 #@router.put("/user/update_profile/")
 #async def update_document(user: user_dependency, body: ProfileUpdateInput):

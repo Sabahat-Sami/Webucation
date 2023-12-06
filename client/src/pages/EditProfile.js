@@ -64,12 +64,6 @@ export default function EditProfile() {
     const saveProfile = async e => {
       e.preventDefault()
       
-      console.log("ewrR"+ newPfp)
-      if(newPfp === null){
-        setNewPfp(pfp)
-      }
-      console.log("asdrR"+ pfp)
-      console.log("asdrR"+ newPfp)
 
       try {
         axios.put('http://localhost:8080/user/update_profile/', {
@@ -92,11 +86,39 @@ export default function EditProfile() {
                 }, 0);
             }
         }).catch(err => console.log(err))
+      }
+      catch (e) {
+          console.log(e);
+      }
     }
-    catch (e) {
-        console.log(e);
+
+
+
+    const delete_pfp = async e => {
+      e.preventDefault()
+      
+
+      try {
+        axios.put('http://localhost:8080/user/delete_profile_picture/', {
+          user_id: `${cookies.user_id}`,
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.jwt}`
+            }
+        }).then(res => {
+            if (res.status === 200 ) {
+              setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+              setNewPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+            }
+        }).catch(err => console.log(err))
+      }
+      catch (e) {
+          console.log(e);
+      }
     }
-  }
+
+
+
     
 
   return (
@@ -120,6 +142,9 @@ export default function EditProfile() {
             <p className='ml-[15%] mt-3 text-3xl underline'>Contact Info</p>
             <p className='ml-[15%] mt-2 text-2xl '>Email: <textarea className='ml-6 mt-2 text-2xl h-11 rounded-xl resize-x w-[30%] px-2 py-2' value = {email} onChange= {e => {setEmail(e.target.value)}}></textarea></p> 
             <p className='ml-[15%] mt-2 text-2xl '>Phone: <textarea className='ml-4 mt-2 text-2xl h-11 rounded-xl resize-x w-[30%] px-2 py-2' value = {phone_num} onChange= {e => {setNum(e.target.value)}}></textarea></p> 
+            <button className='ml-[60.6%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10' onClick={delete_pfp} >
+                Delete profile picture
+            </button>
             <p className='ml-[15%] mt-8 text-3xl underline'>About Me</p>
             <textarea className='ml-[15%] mr-[15%] mt-4 text-2xl w-[65%] h-[20%] px-4 py-4 rounded-2xl resize-y' value = {about} onChange= {e => {setAbout(e.target.value)}}></textarea>
             <a href='/profile'>

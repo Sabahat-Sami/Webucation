@@ -10,40 +10,40 @@ export default function EditProfile() {
 
     const inputRef = useRef(null);
     const navigate = useNavigate()
-  const [pfp, setPfp] = useState("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+    const [pfp, setPfp] = useState("")
     const [newPfp, setNewPfp] = useState(null)
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [phone_num, setNum] = useState("");
     const [about, setAbout] = useState("");
 
-    // useEffect(() => {
-    //     try {
-    //       axios.get('http://localhost:8080/user/get_profile/', {
-    //           headers: {
-    //               Authorization: `Bearer ${cookies.jwt}`
-    //           }
-    //       }).then(res => {
-    //           if (res.status === 200 ) {
-    //             setEmail(res.data.email)
-    //             setName(res.data.fname + " " + res.data.lname)
-    //             setNum(res.data.phone_number)
-    //             setAbout(res.data.about)
-    //             if(res.data.profile_picture == null){
-    //               setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
-    //               setNewPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
-    //             }
-    //             else{
-    //               setPfp(res.data.profile_picture)
-    //               setNewPfp(res.data.profile_picture)
-    //             }
-    //           }
-    //       }).catch(err => console.log(err))
-    //     }
-    //     catch (e) {
-    //         console.log(e);
-    //     }
-    //   }, [])
+    useEffect(() => {
+        try {
+          axios.get('http://localhost:8080/user/get_profile/', {
+              headers: {
+                  Authorization: `Bearer ${cookies.jwt}`
+              }
+          }).then(res => {
+              if (res.status === 200 ) {
+                setEmail(res.data.email)
+                setName(res.data.fname + " " + res.data.lname)
+                setNum(res.data.phone_number)
+                setAbout(res.data.about)
+                if(res.data.profile_picture == null){
+                  setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+                  setNewPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+                }
+                else{
+                  setPfp(res.data.profile_picture)
+                  setNewPfp(res.data.profile_picture)
+                }
+              }
+          }).catch(err => console.log(err))
+        }
+        catch (e) {
+            console.log(e);
+        }
+      }, [])
 
     const handleImageClick = () => {
       inputRef.current.click();
@@ -61,61 +61,61 @@ export default function EditProfile() {
       reader.readAsDataURL(e.target.files[0]);
     }
 
-    // const saveProfile = async e => {
-    //   e.preventDefault()
+    const saveProfile = async e => {
+      e.preventDefault()
       
 
-    //   try {
-    //     axios.put('http://localhost:8080/user/update_profile/', {
-    //       user_id: `${cookies.user_id}`,
-    //       new_email: `${email}`,
-    //       phone_num: `${phone_num}`,
-    //       about_me: `${about}`,
-    //       profile_picture: `${newPfp}`,
+      try {
+        axios.put('http://localhost:8080/user/update_profile/', {
+          user_id: `${cookies.user_id}`,
+          new_email: `${email}`,
+          phone_num: `${phone_num}`,
+          about_me: `${about}`,
+          profile_picture: `${newPfp}`,
 
-    //     }, {
-    //         headers: {
-    //             Authorization: `Bearer ${cookies.jwt}`
-    //         }
-    //     }).then(res => {
-    //         if (res.status === 200 ) {
-    //             setCookie('jwt', res.data.token, {path: "/"});
-    //             setCookie('user_id', res.data.user_id, {path: "/"})
-    //             setTimeout(() => {
-    //               navigate('/profile');
-    //             }, 0);
-    //         }
-    //     }).catch(err => console.log(err))
-    //   }
-    //   catch (e) {
-    //       console.log(e);
-    //   }
-    // }
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.jwt}`
+            }
+        }).then(res => {
+            if (res.status === 200 ) {
+                setCookie('jwt', res.data.token, {path: "/"});
+                setCookie('user_id', res.data.user_id, {path: "/"})
+                setTimeout(() => {
+                  navigate('/profile');
+                }, 0);
+            }
+        }).catch(err => console.log(err))
+      }
+      catch (e) {
+          console.log(e);
+      }
+    }
 
 
 
-    // const delete_pfp = async e => {
-    //   e.preventDefault()
+    const delete_pfp = async e => {
+      e.preventDefault()
       
 
-    //   try {
-    //     axios.put('http://localhost:8080/user/delete_profile_picture/', {
-    //       user_id: `${cookies.user_id}`,
-    //     }, {
-    //         headers: {
-    //             Authorization: `Bearer ${cookies.jwt}`
-    //         }
-    //     }).then(res => {
-    //         if (res.status === 200 ) {
-    //           setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
-    //           setNewPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
-    //         }
-    //     }).catch(err => console.log(err))
-    //   }
-    //   catch (e) {
-    //       console.log(e);
-    //   }
-    // }
+      try {
+        axios.put('http://localhost:8080/user/delete_profile_picture/', {
+          user_id: `${cookies.user_id}`,
+        }, {
+            headers: {
+                Authorization: `Bearer ${cookies.jwt}`
+            }
+        }).then(res => {
+            if (res.status === 200 ) {
+              setPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+              setNewPfp("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+            }
+        }).catch(err => console.log(err))
+      }
+      catch (e) {
+          console.log(e);
+      }
+    }
 
 
 
@@ -125,7 +125,7 @@ export default function EditProfile() {
         <br/>
             <div onClick={handleImageClick} className=''>
                 <button className='float-right px-4 mt-[8%] ml-[50%] mr-[20%] py-3 bg-red-300 text-sm text-white rounded-full hover:bg-red-800 hover:py-4'
-                // onClick={delete_pfp} 
+                onClick={delete_pfp} 
                 >
                   Remove avatar
                 </button>
@@ -155,7 +155,7 @@ export default function EditProfile() {
             ></textarea>
             <a href='/profile'>
                 <button className='ml-[44.5%] px-8 ml-12 mt-4 py-3 bg-[#a6aff8] text-xl text-white rounded-full hover:bg-blue-800 hover:py-4 hover:px-10' 
-                // onClick={saveProfile} 
+                onClick={saveProfile} 
                 >
                     Save Changes
                 </button>

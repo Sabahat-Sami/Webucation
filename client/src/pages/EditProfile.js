@@ -123,12 +123,12 @@ export default function EditProfile() {
   return (
     <div>
         <br/>
-            <div onClick={handleImageClick} className=''>
-                <button className='float-right px-4 mt-[8%] ml-[50%] mr-[20%] py-3 bg-red-300 text-sm text-white rounded-full hover:bg-red-800 hover:py-4'
+        <button className='float-right px-4 mt-[8%] ml-[50%] mr-[20%] py-3 bg-red-300 text-sm text-white rounded-full hover:bg-red-800 hover:py-4'
                 onClick={delete_pfp} 
                 >
                   Remove avatar
-                </button>
+            </button>
+            <div onClick={handleImageClick} className=''>
                 <p className='absolute ml-[55%] mr-[25%] mt-[20%] w-[25%] h-[15%] text-xl opacity-0 hover:cursor-pointer hover:opacity-100 duration-300 inset-0 z-10 flex justify-center items-center font-semibold'>
                   Change photo
                 </p>

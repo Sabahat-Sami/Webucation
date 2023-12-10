@@ -1,0 +1,30 @@
+HOW TO RUN
+----------
+1) Change into repository directory:
+$cd Webucation
+
+2) Server / Backend Setup (requires python version >=3.9):
+(activate a python virtual environment)
+(setup PSQL on your device; PSQL settings should be default -- user should be 'postgres' and host should be 'localhost')
+$cd server
+$pip install -r requirements.txt
+
+Create a new file in the server directory called "config.py" (if it does not exist).
+Open "config.py" and write the following two lines in it:
+DATABASE_PASSWORD = '{your PSQL password here}'
+SECRET_KEY='secret'  
+
+To init your Webucation database (with dummy data):
+$python setup_db.py
+(You can view this dummy data in the sql folder)
+
+Run backend:
+$python main.py
+
+3) Client / Frontend Setup:
+(open a separate terminal and navigate to Webucation folder again)
+$cd client
+$npm install --force
+$npm start
+
+Finally navigate to http://localhost:3000/ in your browser.

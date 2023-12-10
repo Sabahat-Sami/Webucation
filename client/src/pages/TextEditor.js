@@ -54,7 +54,7 @@ const TextEditor = () =>{
                     }
                 }).then(res => {
                     if (res.status === 200 ) {
-                        navigate("/")
+                        navigate(-1)
                     }
                 }).catch(err => console.log(err))
             }
@@ -82,7 +82,7 @@ const TextEditor = () =>{
                 }).then((res) => {
                     if(res.status == 200){
                         console.log("updated sucessfully!");
-                        navigate("/");
+                        navigate(-1);
                     }
                 })
             }
